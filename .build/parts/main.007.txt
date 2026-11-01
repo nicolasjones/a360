@@ -1,0 +1,206 @@
+      <sc-if value="{{ cliInsights }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <section style="background: var(--d32,#f4fbfa); border: 1px solid var(--d33,#cde7e3); border-radius: 14px; padding: 18px 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 18px">
+            <div style="width: 84px; height: 84px; border-radius: 42px; background: var(--d7,#ffffff); border: 6px solid {{ ci.scoreColor }}; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0"><span style="font-size: 24px; font-weight: 800; line-height: 1">{{ ci.score }}</span><span style="font-size: 10px; font-weight: 700; color: var(--d5,#5b6577)">de 100</span></div>
+            <div style="flex: 1 1 320px">
+              <div style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">Salud de la relación</div>
+              <div style="font-size: 20px; font-weight: 800; color: {{ ci.scoreColor }}">{{ ci.scoreLabel }}</div>
+              <div style="margin-top: 4px; font-size: 14px; color: var(--d15,#0b3f3b)">{{ ci.resumen }}</div>
+            </div>
+          </section>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px">
+            <sc-for list="{{ ci.kpis }}" as="k" hint-placeholder-count="6">
+              <div style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 14px 18px">
+                <div style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">{{ k.label }}</div>
+                <div style="margin-top: 4px; font-size: 20px; font-weight: 800; color: {{ k.color }}">{{ k.value }}</div>
+                <div style="font-size: 12px; color: var(--d5,#5b6577)">{{ k.sub }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; align-items: start">
+            <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 18px 20px">
+              <h2 style="margin: 0 0 8px; font-size: 16px; font-weight: 800">Señales de riesgo</h2>
+              <sc-for list="{{ ci.riesgos }}" as="r" hint-placeholder-count="3">
+                <div style="display: flex; gap: 10px; padding: 9px 0; border-top: 1px solid var(--d20,#eef1f5); font-size: 13px"><span style="flex-shrink: 0; height: 20px; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: {{ r.bg }}; color: {{ r.color }}">{{ r.sev }}</span><span>{{ r.t }}</span></div>
+              </sc-for>
+              <sc-if value="{{ ci.sinRiesgos }}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; color: var(--d18,#047857)">Sin señales de riesgo por ahora.</div></sc-if>
+            </section>
+            <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 18px 20px">
+              <h2 style="margin: 0 0 8px; font-size: 16px; font-weight: 800">Oportunidades con este cliente</h2>
+              <sc-for list="{{ ci.oportunidades }}" as="r" hint-placeholder-count="3">
+                <div style="padding: 9px 0; border-top: 1px solid var(--d20,#eef1f5); font-size: 13px">{{ r.t }}</div>
+              </sc-for>
+              <sc-if value="{{ ci.sinOpo }}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; color: var(--d5,#5b6577)">Todavía no se detectaron oportunidades.</div></sc-if>
+            </section>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; align-items: start">
+            <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 18px 20px">
+              <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 800">Qué te dice en las reuniones</h2>
+              <div style="font-size: 12px; color: var(--d5,#5b6577); margin-bottom: 8px">Problemas y dudas que aparecen en las reuniones analizadas</div>
+              <sc-for list="{{ ci.dolores }}" as="r" hint-placeholder-count="3">
+                <div style="padding: 8px 0; border-top: 1px solid var(--d20,#eef1f5); font-size: 13px">{{ r.t }}</div>
+              </sc-for>
+              <sc-if value="{{ ci.sinDol }}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; color: var(--d5,#5b6577)">No hay reuniones analizadas con este cliente todavía.</div></sc-if>
+            </section>
+            <section style="background: var(--d13,#e6f4f2); border-radius: 14px; padding: 18px 20px">
+              <h2 style="margin: 0 0 8px; font-size: 16px; font-weight: 800; color: var(--d15,#0b3f3b)">Qué hacer ahora</h2>
+              <sc-for list="{{ ci.acciones }}" as="a" hint-placeholder-count="3">
+                <div style="display: flex; align-items: center; gap: 10px; padding: 8px 0; border-top: 1px solid var(--d33,#cde7e3)"><span style="flex-grow: 1; font-size: 13px; color: var(--d15,#0b3f3b)">{{ a.t }}</span><button onClick="{{ a.go }}" style="height: 32px; padding: 0 12px; border: 1px solid #0F766E; border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d16,#0b5f58)">{{ a.label }}</button></div>
+              </sc-for>
+            </section>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </sc-if>
+
+  <!-- ========== EDITOR DE PROPUESTA ========== -->
+  <sc-if value="{{ isPropEd }}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
+        <button onClick="{{ backProps }}" style="height: 40px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">← Propuestas</button>
+        <input value="{{ ed.titulo }}" onChange="{{ setPTitulo }}" aria-label="Título de la propuesta" style="flex: 1 1 260px; height: 44px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 16px; font-weight: 800; color: var(--d1,#101827); background: var(--d7,#ffffff)">
+        <span style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: {{ ed.estBg }}; color: {{ ed.estFg }}">{{ ed.estado }}</span>
+        <sc-if value="{{ ed.dirty }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 700; color: var(--d28,#b45309)">Cambios sin guardar</span></sc-if>
+        <sc-if value="{{ ed.clean }}" hint-placeholder-val="{{ true }}"><span style="font-size: 12px; font-weight: 700; color: var(--d18,#047857)">Guardada</span></sc-if>
+        <button onClick="{{ abrirVersiones }}" style="height: 40px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">{{ ed.versLabel }}</button>
+        <sc-if value="{{ ed.esProp }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ guardarProp }}" style="height: 40px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">{{ ed.guardarLabel }}</button>
+          <button onClick="{{ duplicarProp }}" style="height: 40px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">Duplicar como variante</button>
+          <sc-if value="{{ ed.hayPlantilla }}" hint-placeholder-val="{{ false }}"><button onClick="{{ actualizarPlantilla }}" style="height: 40px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">Actualizar plantilla «{{ ed.plantilla }}»</button></sc-if>
+          <button onClick="{{ abrirPlantilla }}" style="height: 40px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">Guardar como plantilla</button>
+          <button onClick="{{ abrirEnviar }}" style="height: 40px; padding: 0 16px; border: 0; border-radius: 10px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">{{ ed.enviarLabel }}</button>
+        </sc-if>
+        <sc-if value="{{ ed.esTpl }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ guardarTplCambios }}" style="height: 40px; padding: 0 16px; border: 0; border-radius: 10px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">Guardar cambios en la plantilla</button>
+          <button onClick="{{ guardarTplNueva }}" style="height: 40px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">Guardar como nueva</button>
+        </sc-if>
+      </div>
+      <sc-if value="{{ ed.esTpl }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 14px; border: 1px solid #0F766E; background: var(--d13,#e6f4f2); border-radius: 12px; font-size: 13px; color: var(--d16,#0b5f58)">
+          <span style="font-weight: 800">Estás editando la plantilla «{{ ed.plantilla }}».</span>
+          <span>Los cambios no afectan a las propuestas ya creadas. Probala con un cliente:</span>
+          <select onChange="{{ probarCon }}" aria-label="Probar con" style="height: 34px; padding: 0 10px; border: 1px solid #0F766E; border-radius: 8px; background: var(--d7,#ffffff); font-size: 13px; color: var(--d1,#101827)">
+            <sc-for list="{{ probarOpts }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for>
+          </select>
+        </div>
+      </sc-if>
+      <sc-if value="{{ ed.yaEnviada }}" hint-placeholder-val="{{ false }}">
+        <div style="padding: 12px 14px; border: 1px solid #1D4ED8; background: var(--d36,#dbeafe); border-radius: 12px; font-size: 13px; color: var(--d37,#1e3a8a)"><span style="font-weight: 800">Esta propuesta ya fue enviada.</span> Si la modificás, se guarda como una versión nueva y el cliente ve la última cuando la reenvíes. La anterior queda en Versiones.</div>
+      </sc-if>
+
+      <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px">
+
+        <!-- Panel de control -->
+        <div style="flex: 0 1 400px; min-width: 300px; display: flex; flex-direction: column; gap: 14px">
+          <div style="display: flex; flex-wrap: wrap; gap: 6px">
+            <sc-for list="{{ pedTabs }}" as="f" hint-placeholder-count="4">
+              <div>
+                <sc-if value="{{ f.active }}" hint-placeholder-val="{{ false }}"><button onClick="{{ f.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid #101827; border-radius: 18px; background: var(--d2,#101827); color: #fff; font-size: 13px; font-weight: 700">{{ f.label }}</button></sc-if>
+                <sc-if value="{{ f.inactive }}" hint-placeholder-val="{{ true }}"><button onClick="{{ f.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 18px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 13px; font-weight: 600">{{ f.label }}</button></sc-if>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- Asistente -->
+          <sc-if value="{{ pedAsistente }}" hint-placeholder-val="{{ true }}">
+            <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+              <div style="font-weight: 800">Pedile cambios al asistente</div>
+              <div style="font-size: 12px; color: var(--d5,#5b6577)">Antes de aplicar cualquier cambio te lo muestro y vos confirmás.</div>
+              <div style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto">
+                <sc-for list="{{ pChat }}" as="m" hint-placeholder-count="2">
+                  <div style="display: flex; flex-direction: column; align-items: {{ m.align }}">
+                    <div style="max-width: 92%; padding: 10px 12px; border-radius: 12px; font-size: 13px; line-height: 1.45; background: {{ m.bg }}; color: {{ m.fg }}">{{ m.text }}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ pPend.has }}" hint-placeholder-val="{{ false }}">
+                <div style="border: 1px solid #0F766E; background: var(--d13,#e6f4f2); border-radius: 12px; padding: 12px 14px">
+                  <div style="font-size: 12px; font-weight: 800; color: var(--d16,#0b5f58)">Cambios propuestos</div>
+                  <sc-for list="{{ pPend.items }}" as="c" hint-placeholder-count="2">
+                    <div style="display: flex; gap: 8px; padding-top: 6px; font-size: 13px; color: var(--d15,#0b3f3b)"><span>•</span><span>{{ c.d }}</span></div>
+                  </sc-for>
+                  <div style="margin-top: 10px; display: flex; gap: 8px">
+                    <button onClick="{{ aplicarPend }}" style="height: 36px; padding: 0 14px; border: 0; border-radius: 8px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">Aplicar</button>
+                    <button onClick="{{ descartarPend }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">Descartar</button>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ pCanUndo }}" hint-placeholder-val="{{ false }}"><button onClick="{{ deshacerProp }}" style="align-self: flex-start; height: 32px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d1,#101827)">Deshacer el último cambio aplicado</button></sc-if>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px">
+                <sc-for list="{{ pSugeridas }}" as="g" hint-placeholder-count="4">
+                  <button onClick="{{ g.pick }}" style="height: 30px; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 15px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 600; color: var(--d1,#101827)">{{ g.label }}</button>
+                </sc-for>
+              </div>
+              <div style="display: flex; gap: 8px; align-items: flex-end">
+                <textarea value="{{ pChatIn }}" onChange="{{ setPChatIn }}" placeholder="Ej.: agregá una sección de garantía" aria-label="Instrucción para el asistente" rows="3" style="flex: 1; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px; color: var(--d1,#101827); background: var(--d7,#ffffff); min-height: 66px; padding: 10px 12px; resize: vertical; font-family: inherit; line-height: 1.4"></textarea>
+                <button onClick="{{ sendPChat }}" style="height: 42px; padding: 0 14px; border: 0; border-radius: 10px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">Pedir</button>
+              </div>
+            </section>
+          </sc-if>
+
+          <!-- Estructura -->
+          <sc-if value="{{ pedEstructura }}" hint-placeholder-val="{{ false }}">
+            <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 4px">
+              <div style="font-weight: 800">Secciones</div>
+              <div style="font-size: 12px; color: var(--d5,#5b6577); margin-bottom: 6px">Activá, ordená y editá. Podés usar [cliente], [contacto], [monto], [vence], [fecha] y [negocio]: se completan solos.</div>
+              <sc-for list="{{ pSecs }}" as="x" hint-placeholder-count="6">
+                <div style="display: flex; align-items: center; gap: 8px; padding: 8px 8px; border-radius: 10px; background: {{ x.rowBg }}">
+                  <sc-if value="{{ x.on }}" hint-placeholder-val="{{ true }}"><button onClick="{{ x.toggle }}" aria-label="Ocultar sección" style="width: 38px; height: 22px; border: 0; border-radius: 11px; background: #0F766E; position: relative; flex-shrink: 0"><span style="position: absolute; top: 3px; left: 19px; width: 16px; height: 16px; border-radius: 8px; background: var(--d7,#ffffff)"></span></button></sc-if>
+                  <sc-if value="{{ x.off }}" hint-placeholder-val="{{ false }}"><button onClick="{{ x.toggle }}" aria-label="Mostrar sección" style="width: 38px; height: 22px; border: 0; border-radius: 11px; background: var(--d38,#b8c0ce); position: relative; flex-shrink: 0"><span style="position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 8px; background: var(--d7,#ffffff)"></span></button></sc-if>
+                  <button onClick="{{ x.pick }}" style="flex: 1; text-align: left; border: 0; background: transparent; padding: 4px 0; font-size: 14px; font-weight: 700; color: {{ x.color }}">{{ x.titulo }}</button>
+                  <button onClick="{{ x.up }}" aria-label="Subir" style="width: 30px; height: 30px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 13px; color: var(--d1,#101827)">↑</button>
+                  <button onClick="{{ x.down }}" aria-label="Bajar" style="width: 30px; height: 30px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 13px; color: var(--d1,#101827)">↓</button>
+                </div>
+              </sc-for>
+              <button onClick="{{ toggleBib }}" style="margin-top: 8px; align-self: flex-start; height: 34px; padding: 0 12px; border: 1px solid #0F766E; border-radius: 8px; background: var(--d13,#e6f4f2); font-size: 13px; font-weight: 700; color: var(--d16,#0b5f58)">+ Biblioteca de bloques</button>
+              <sc-if value="{{ bibOpen }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px"><sc-for list="{{ pBloques }}" as="b" hint-placeholder-count="6"><button onClick="{{ b.add }}" style="height: 30px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 15px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d1,#101827)">+ {{ b.label }}</button></sc-for></div></sc-if>
+              <button onClick="{{ addSec }}" style="margin-top: 8px; align-self: flex-start; height: 34px; padding: 0 12px; border: 1px dashed #0F766E; border-radius: 8px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d14,#0f766e)">+ Agregar sección</button>
+            </section>
+
+            <sc-if value="{{ pSel.has }}" hint-placeholder-val="{{ true }}">
+              <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+                <div style="font-weight: 800">Editar sección</div>
+                <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700">Título
+                  <input value="{{ pSel.titulo }}" onChange="{{ setSecTitulo }}" style="height: 42px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px; color: var(--d1,#101827); background: var(--d7,#ffffff)">
+                </label>
+                <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700">Texto
+                  <textarea value="{{ pSel.texto }}" onChange="{{ setSecTexto }}" rows="6" style="padding: 10px 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px; line-height: 1.5; color: var(--d1,#101827); background: var(--d7,#ffffff); font-family: inherit; resize: vertical"></textarea>
+                </label>
+                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px">
+                  <span style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">Composición:</span>
+                  <sc-for list="{{ pSelComps }}" as="q" hint-placeholder-count="3"><button onClick="{{ q.run }}" style="height: 30px; padding: 0 10px; border: 1px solid {{ q.bd }}; border-radius: 15px; background: {{ q.bg }}; font-size: 12px; font-weight: 700; color: {{ q.fg }}">{{ q.label }}</button></sc-for>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px">
+                  <span style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">Reescribir esta sección (IA a pedido):</span>
+                  <sc-for list="{{ pReescribir }}" as="r" hint-placeholder-count="3"><button onClick="{{ r.run }}" style="height: 30px; padding: 0 10px; border: 1px solid #0F766E; border-radius: 15px; background: var(--d13,#e6f4f2); font-size: 12px; font-weight: 700; color: var(--d16,#0b5f58)">{{ r.label }}</button></sc-for>
+                </div>
+                <button onClick="{{ delSec }}" style="align-self: flex-start; height: 32px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d19,#b91c1c)">Eliminar sección</button>
+              </section>
+            </sc-if>
+
+            <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 8px">
+              <div style="font-weight: 800">Detalle de la inversión</div>
+              <sc-for list="{{ pItems }}" as="i" hint-placeholder-count="3">
+                <div style="display: flex; gap: 8px; align-items: center">
+                  <input value="{{ i.c }}" onChange="{{ i.setC }}" aria-label="Concepto" style="flex: 1; min-width: 0; height: 40px; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; font-size: 13px; color: var(--d1,#101827); background: var(--d7,#ffffff)">
+                  <input value="{{ i.m }}" onChange="{{ i.setM }}" aria-label="Monto" style="width: 110px; height: 40px; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; font-size: 13px; color: var(--d1,#101827); background: var(--d7,#ffffff)">
+                  <button onClick="{{ i.del }}" aria-label="Quitar" style="width: 34px; height: 34px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); color: var(--d19,#b91c1c)">×</button>
+                </div>
+              </sc-for>
+              <div style="display: flex; align-items: center; justify-content: space-between">
+                <button onClick="{{ addItem }}" style="height: 34px; padding: 0 12px; border: 1px dashed #0F766E; border-radius: 8px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d14,#0f766e)">+ Agregar ítem</button>
+                <span style="font-weight: 800">Total {{ pTotal }}</span>
+              </div>
+              <div style="background: var(--d0,#f3f5f8); border-radius: 10px; padding: 10px 12px; font-size: 12px; color: var(--d31,#374151)">{{ pPiso }}</div>
+            </section>
+          </sc-if>
+
+          <!-- Diseño -->
+          <sc-if value="{{ pedDiseno }}" hint-placeholder-val="{{ false }}">
+            <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+              <div style="font-weight: 800">Portada</div>
