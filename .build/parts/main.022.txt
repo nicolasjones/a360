@@ -1,0 +1,170 @@
+                  <sc-for list="{{ m.modos }}" as="o" hint-placeholder-count="2"><button onClick="{{ o.pick }}" style="height: 30px; padding: 0 12px; border: 1px solid {{ o.bd }}; border-radius: 15px; background: {{ o.bg }}; color: {{ o.fg }}; font-size: 12px; font-weight: 700; opacity: {{ o.op }}">{{ o.label }}</button></sc-for>
+                  <button onClick="{{ m.abrir }}" style="height: 30px; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d1,#101827)">{{ m.abrirLabel }}</button>
+                </div>
+                <sc-if value="{{ m.abierto }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 6px"><textarea value="{{ m.texto }}" onChange="{{ m.setTexto }}" rows="3" style="padding: 10px 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 13px; color: var(--d1,#101827); background: var(--d7,#ffffff); font-family: inherit"></textarea><div style="font-size: 12px; color: var(--d5,#5b6577)">Podés usar [nombre] y [firma]. {{ m.nota }}</div></div></sc-if>
+              </div>
+            </sc-for>
+          </section>
+        </div>
+      </sc-if>
+
+      <!-- Ajustes -->
+      <sc-if value="{{ maAjustes }}" hint-placeholder-val="{{ false }}">
+        <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 18px 20px; display: flex; flex-direction: column; gap: 16px; max-width: 640px">
+          <div><div style="font-weight: 800; margin-bottom: 8px">¿Por dónde te aviso?</div><div style="display: flex; gap: 6px"><sc-for list="{{ maCanales }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.pick }}" style="height: 34px; padding: 0 14px; border: 1px solid {{ o.bd }}; border-radius: 17px; background: {{ o.bg }}; color: {{ o.fg }}; font-size: 13px; font-weight: 700">{{ o.label }}</button></sc-for></div></div>
+          <div><div style="font-weight: 800; margin-bottom: 8px">Horario de silencio</div><div style="display: flex; align-items: center; gap: 8px"><span style="font-size: 13px; color: var(--d5,#5b6577)">De</span><input value="{{ maDesde }}" onChange="{{ setMaDesde }}" aria-label="Desde" style="width: 90px; height: 38px; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; font-size: 14px; color: var(--d1,#101827); background: var(--d7,#ffffff)"><span style="font-size: 13px; color: var(--d5,#5b6577)">a</span><input value="{{ maHasta }}" onChange="{{ setMaHasta }}" aria-label="Hasta" style="width: 90px; height: 38px; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; font-size: 14px; color: var(--d1,#101827); background: var(--d7,#ffffff)"></div></div>
+          <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700">Firma de tus mensajes<input value="{{ maFirma }}" onChange="{{ setMaFirma }}" style="height: 42px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px; color: var(--d1,#101827); background: var(--d7,#ffffff)"></label>
+          <div><div style="font-weight: 800; margin-bottom: 8px">Calendarios</div><div style="display: flex; flex-direction: column; gap: 8px"><sc-for list="{{ maCals }}" as="c" hint-placeholder-count="2"><div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--d8,#e4e8ee); border-radius: 10px"><span style="flex: 1; font-weight: 700">{{ c.n }}</span><span style="font-size: 12px; font-weight: 700; color: {{ c.fg }}">{{ c.estado }}</span><button onClick="{{ c.toggle }}" style="height: 30px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d1,#101827)">{{ c.accion }}</button></div></sc-for></div></div>
+          <div style="font-size: 12px; color: var(--d5,#5b6577)">En el prototipo la conexión con los calendarios es simulada.</div>
+          <div style="border-top: 1px solid var(--d20,#eef1f5); padding-top: 12px; display: flex; align-items: center; gap: 12px"><div style="flex: 1; font-size: 13px; color: var(--d5,#5b6577)">Los 7 agentes que usa el asistente (Comercial, Propuestas, Cobranzas y finanzas…), su autonomía y el conocimiento que leen.</div><button onClick="{{ irAgentes }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">Configurar agentes</button></div>
+        </section>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ========== EJECUCIONES ========== -->
+  <sc-if value="{{ isEjecuciones }}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; flex-direction: column; gap: 18px; max-width: 980px">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+        <sc-for list="{{ ejecKpis }}" as="k" hint-placeholder-count="3">
+          <div style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 16px 20px">
+            <div style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">{{ k.label }}</div>
+            <div style="margin-top: 4px; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; color: {{ k.color }}">{{ k.value }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px"><select onChange="{{ ejecFiltrosSel.set }}" aria-label="ejecFiltros" style="height: 36px; min-width: 220px; max-width: 100%; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 9px; background: var(--d7,#ffffff); font-size: 13px; color: var(--d1,#101827)"><sc-for list="{{ ejecFiltrosSel.opts }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.label }}</option></sc-for></select></div>
+      <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 8px 20px">
+        <sc-if value="{{ ejecVacio }}" hint-placeholder-val="{{ false }}"><div style="padding: 24px 0; text-align: center; color: var(--d5,#5b6577)">No hay ejecuciones con este estado.</div></sc-if>
+        <sc-for list="{{ ejecs }}" as="e" hint-placeholder-count="6">
+          <div style="padding: 16px 0; border-top: 1px solid var(--d20,#eef1f5)">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
+              <span style="flex: 1 1 280px">
+                <span style="display: block; font-weight: 800">{{ e.flujo }}</span>
+                <span style="display: block; font-size: 13px; color: var(--d5,#5b6577)">{{ e.detalle }} · {{ e.origen }}</span>
+              </span>
+              <span style="font-size: 12px; color: var(--d5,#5b6577)">{{ e.cuando }}{{ e.dur }}</span>
+              <span style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: {{ e.bg }}; color: {{ e.fg }}">{{ e.estado }}</span>
+            </div>
+            <sc-if value="{{ e.hasNota }}" hint-placeholder-val="{{ false }}"><div style="margin-top: 10px; background: var(--d0,#f3f5f8); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--d31,#374151)">{{ e.nota }}</div></sc-if>
+            <sc-if value="{{ e.esperando }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top: 10px; display: flex; gap: 8px">
+                <button onClick="{{ e.aprobar }}" style="height: 36px; padding: 0 14px; border: 0; border-radius: 10px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">Aprobar y enviar</button>
+                <button onClick="{{ e.descartar }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 13px; font-weight: 700">Descartar</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ e.conError }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top: 10px"><button onClick="{{ e.reintentar }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 13px; font-weight: 700">{{ e.accion }}</button></div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </section>
+      <div style="font-size: 12px; color: var(--d5,#5b6577)">Cada ejecución queda registrada con su resultado. Lo que involucra a un cliente espera tu aprobación antes de salir.</div>
+    </div>
+  </sc-if>
+
+  <!-- ========== ASISTENTE ========== -->
+  <sc-if value="{{ isAsistente }}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; flex-direction: column; gap: 16px; max-width: 860px">
+      <div style="display: flex; flex-wrap: wrap; gap: 8px"><sc-for list="{{ asTabs }}" as="t" hint-placeholder-count="3"><div>
+                <sc-if value="{{ t.active }}" hint-placeholder-val="{{ false }}"><button onClick="{{ t.pick }}" style="height: 38px; padding: 0 16px; border: 1px solid #101827; border-radius: 19px; background: var(--d2,#101827); color: #fff; font-size: 13px; font-weight: 700">{{ t.label }}</button></sc-if>
+                <sc-if value="{{ t.inactive }}" hint-placeholder-val="{{ true }}"><button onClick="{{ t.pick }}" style="height: 38px; padding: 0 16px; border: 1px solid var(--d6,#d5dbe5); border-radius: 19px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 13px; font-weight: 600">{{ t.label }}</button></sc-if>
+              </div></sc-for></div>
+      <sc-if value="{{ asAgentes }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+            <sc-for list="{{ agKpis }}" as="k" hint-placeholder-count="3">
+              <div style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 16px 20px">
+                <div style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">{{ k.label }}</div>
+                <div style="margin-top: 4px; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; color: {{ k.color }}">{{ k.value }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <section style="background: var(--d13,#e6f4f2); border-radius: 14px; padding: 14px 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+            <div style="flex: 1 1 360px; font-size: 13px; color: var(--d15,#0b3f3b)">Los agentes trabajan con el contexto de tu negocio (documentos, reuniones, clientes, costos). Todo lo que sale hacia un cliente espera tu aprobación; cada acción queda registrada. Los que escriben a clientes nunca actúan solos. Integraciones y Seguridad y auditoría trabajan de fondo y no se configuran acá.</div>
+            <button onClick="{{ goEjec }}" style="height: 36px; padding: 0 14px; border: 0; border-radius: 10px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">Ver aprobaciones</button>
+          </section>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 16px; align-items: start">
+            <sc-for list="{{ agentesL }}" as="a" hint-placeholder-count="7">
+              <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+                <div style="display: flex; align-items: center; gap: 12px">
+                  <div style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; background: var(--d13,#e6f4f2); display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--d14,#0f766e)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"></path></svg></div>
+                  <div style="flex-grow: 1; font-size: 16px; font-weight: 800">{{ a.nombre }}</div>
+                  <sc-if value="{{ a.on }}" hint-placeholder-val="{{ true }}"><button onClick="{{ a.toggle }}" aria-label="Desactivar agente" style="width: 48px; height: 28px; border: 0; border-radius: 14px; background: #0F766E; position: relative"><span style="position: absolute; top: 3px; right: 3px; width: 22px; height: 22px; border-radius: 11px; background: var(--d7,#ffffff)"></span></button></sc-if>
+                  <sc-if value="{{ a.off }}" hint-placeholder-val="{{ false }}"><button onClick="{{ a.toggle }}" aria-label="Activar agente" style="width: 48px; height: 28px; border: 0; border-radius: 14px; background: var(--d45,#d5dbe5); position: relative"><span style="position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 11px; background: var(--d7,#ffffff)"></span></button></sc-if>
+                </div>
+                <div style="font-size: 13px; color: var(--d31,#374151)">{{ a.desc }}</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center"><span style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">Usa:</span>
+                  <sc-for list="{{ a.usa }}" as="u" hint-placeholder-count="3"><span style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: var(--d0,#f3f5f8); color: var(--d1,#101827)">{{ u.t }}</span></sc-for>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center"><span style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">Autonomía:</span>
+                  <sc-for list="{{ a.niveles }}" as="n" hint-placeholder-count="3"><div>
+                    <sc-if value="{{ n.active }}" hint-placeholder-val="{{ false }}"><button onClick="{{ n.pick }}" style="height: 30px; padding: 0 12px; border: 0; border-radius: 15px; background: var(--d2,#101827); color: #fff; font-size: 12px; font-weight: 700">{{ n.label }}</button></sc-if>
+                    <sc-if value="{{ n.inactive }}" hint-placeholder-val="{{ true }}"><button onClick="{{ n.pick }}" style="height: 30px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 15px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 12px; font-weight: 700">{{ n.label }}</button></sc-if>
+                  </div></sc-for>
+                </div>
+                <sc-if value="{{ a.externo }}" hint-placeholder-val="{{ false }}"><div style="font-size: 12px; color: var(--d5,#5b6577)">Escribe a clientes, por eso nunca actúa sin tu aprobación.</div></sc-if>
+                <div style="border-top: 1px solid var(--d20,#eef1f5); padding-top: 10px; font-size: 12px; color: var(--d5,#5b6577)">{{ a.last }}</div>
+                <sc-if value="{{ a.hayAdapt }}" hint-placeholder-val="{{ false }}"><div style="font-size: 12px; font-weight: 700; color: var(--d50,#5b21b6)">{{ a.adaptTxt }}</div></sc-if>
+              </section>
+            </sc-for>
+          </div>
+          <div><button onClick="{{ agMasToggle }}" style="height: 40px; padding: 0 16px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">{{ agMasLbl }}</button></div>
+
+          <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 14px">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+              <div style="flex: 1 1 320px"><h2 style="margin: 0; font-size: 18px; font-weight: 800">Social Hub · Instagram y LinkedIn</h2><div style="font-size: 13px; color: var(--d5,#5b6577)">Conexión con tu futura app de gestión de redes sociales. Este sistema pone el contexto y los clientes; el Social Hub, el contenido.</div></div>
+              <span style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: var(--d10,#fef3c7); color: var(--d12,#92400e)">{{ shubTxt }}</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px">
+              <div style="background: var(--d0,#f3f5f8); border-radius: 10px; padding: 12px 14px"><div style="font-size: 12px; font-weight: 800; margin-bottom: 4px">Recibe del Social Hub</div><div style="font-size: 13px; color: var(--d31,#374151)">Mensajes, comentarios y seguidores con interés, ya calificados. Entran a tus prospectos y al Cliente 360 como actividad.</div></div>
+              <div style="background: var(--d0,#f3f5f8); border-radius: 10px; padding: 12px 14px"><div style="font-size: 12px; font-weight: 800; margin-bottom: 4px">Le entrega</div><div style="font-size: 13px; color: var(--d31,#374151)">Tu metodología, tono de marca, servicios y casos de éxito que marques como públicos, para crear contenido con contexto real.</div></div>
+              <div style="background: var(--d0,#f3f5f8); border-radius: 10px; padding: 12px 14px"><div style="font-size: 12px; font-weight: 800; margin-bottom: 4px">Cómo se conecta</div><div style="font-size: 13px; color: var(--d31,#374151)">API y webhooks con una clave propia. El Social Hub solo ve lo que habilites acá y podés revocarla cuando quieras.</div></div>
+            </div>
+            <sc-if value="{{ shubOff }}" hint-placeholder-val="{{ true }}">
+              <div><button onClick="{{ shubPrep }}" style="height: 40px; padding: 0 16px; border: 0; border-radius: 10px; background: #0F766E; color: #fff; font-size: 14px; font-weight: 700">Preparar conexión</button></div>
+            </sc-if>
+            <sc-if value="{{ shubOn }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; flex-direction: column; gap: 4px">
+                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--d20,#eef1f5)">
+                  <span style="flex: 1 1 240px"><span style="display: block; font-weight: 700">Clave de conexión</span><span style="display: block; font-size: 13px; color: var(--d5,#5b6577); font-family: monospace">{{ shubKey }}</span></span>
+                  <button onClick="{{ shubCopy }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">Copiar</button>
+                  <button onClick="{{ shubOffBtn }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d19,#b91c1c)">Revocar</button>
+                </div>
+                <sc-for list="{{ shubTog }}" as="n" hint-placeholder-count="3">
+                  <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--d20,#eef1f5)">
+                    <span style="flex-grow: 1"><span style="display: block; font-weight: 600">{{ n.label }}</span><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">{{ n.sub }}</span></span>
+                    <sc-if value="{{ n.on }}" hint-placeholder-val="{{ false }}"><button onClick="{{ n.toggle }}" aria-label="Desactivar" style="width: 48px; height: 28px; border: 0; border-radius: 14px; background: #0F766E; position: relative"><span style="position: absolute; top: 3px; right: 3px; width: 22px; height: 22px; border-radius: 11px; background: var(--d7,#ffffff)"></span></button></sc-if>
+                    <sc-if value="{{ n.off }}" hint-placeholder-val="{{ true }}"><button onClick="{{ n.toggle }}" aria-label="Activar" style="width: 48px; height: 28px; border: 0; border-radius: 14px; background: var(--d45,#d5dbe5); position: relative"><span style="position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 11px; background: var(--d7,#ffffff)"></span></button></sc-if>
+                  </div>
+                </sc-for>
+                <div style="font-size: 12px; color: var(--d5,#5b6577)">Cuando el Social Hub se conecte, el agente Comercial empieza a calificar esos mensajes y se crea el canal «Redes sociales» entre tus canales.</div>
+              </div>
+            </sc-if>
+          </section>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ asDocs }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+              <div style="flex: 1 1 320px"><h2 style="margin: 0; font-size: 18px; font-weight: 800">Base de conocimiento</h2><div style="font-size: 13px; color: var(--d5,#5b6577)">Todo lo que subís se lee, se divide en fragmentos y queda como contexto del asistente y de los agentes. Siempre responden con cita de la fuente.</div></div>
+              <button onClick="{{ abrirDoc }}" style="height: 40px; padding: 0 16px; border: 0; border-radius: 10px; background: #0F766E; color: #fff; font-size: 14px; font-weight: 700">Subir documento</button>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px">
+              <sc-for list="{{ docKpis }}" as="k" hint-placeholder-count="3">
+                <div style="background: var(--d0,#f3f5f8); border-radius: 10px; padding: 10px 14px"><div style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">{{ k.label }}</div><div style="font-size: 22px; font-weight: 800">{{ k.value }}</div></div>
+              </sc-for>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center"><span style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">Se indexa solo:</span>
+              <span style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: var(--d35,#d1fae5); color: var(--d18,#047857)">Reuniones transcriptas</span>
+              <span style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: var(--d35,#d1fae5); color: var(--d18,#047857)">Propuestas</span>
+              <span style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: var(--d35,#d1fae5); color: var(--d18,#047857)">Facturas y cobros</span>
+              <span style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: var(--d35,#d1fae5); color: var(--d18,#047857)">Costos</span>
+              <span style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: var(--d35,#d1fae5); color: var(--d18,#047857)">Tickets del gestor</span>
+            </div>
+          </section>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px"><select onChange="{{ docFiltrosSel.set }}" aria-label="docFiltros" style="height: 36px; min-width: 220px; max-width: 100%; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 9px; background: var(--d7,#ffffff); font-size: 13px; color: var(--d1,#101827)"><sc-for list="{{ docFiltrosSel.opts }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.label }}</option></sc-for></select></div>
+          <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 8px 20px">
+            <sc-for list="{{ docs }}" as="d" hint-placeholder-count="5">
