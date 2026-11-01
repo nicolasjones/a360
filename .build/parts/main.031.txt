@@ -1,0 +1,229 @@
+              <button onClick="{{ a.remove }}" style="height: 32px; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d19,#b91c1c)">Revocar</button>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="background: var(--d0,#f3f5f8); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+          <div style="font-weight: 800">Invitar a alguien</div>
+          <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700">Email
+            <input value="{{ invEmail }}" onChange="{{ setInvEmail }}" placeholder="nombre@empresa.com" style="height: 44px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px; color: var(--d1,#101827); background: var(--d7,#ffffff)">
+          </label>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px">
+            <sc-for list="{{ invRolesView }}" as="r" hint-placeholder-count="3">
+              <div>
+                <sc-if value="{{ r.active }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid #0F766E; border-radius: 18px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">{{ r.label }}</button></sc-if>
+                <sc-if value="{{ r.inactive }}" hint-placeholder-val="{{ true }}"><button onClick="{{ r.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 18px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 13px; font-weight: 600">{{ r.label }}</button></sc-if>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: flex; justify-content: flex-end">
+            <button onClick="{{ sendInvite }}" style="height: 44px; padding: 0 18px; border: 0; border-radius: 10px; background: #0F766E; color: #fff; font-size: 14px; font-weight: 700">Enviar link de acceso</button>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-weight: 800; margin-bottom: 2px">Qué ve el cliente</div>
+          <div style="font-size: 13px; color: var(--d5,#5b6577); margin-bottom: 4px">El portal es una capa curada: tus tickets, notas internas y rentabilidad nunca se muestran.</div>
+          <sc-for list="{{ visToggles }}" as="v" hint-placeholder-count="3">
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--d20,#eef1f5)">
+              <span style="flex-grow: 1">{{ v.label }}</span>
+              <sc-if value="{{ v.on }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ v.toggle }}" aria-label="Ocultar" style="width: 48px; height: 28px; border: 0; border-radius: 14px; background: #0F766E; position: relative"><span style="position: absolute; top: 3px; left: 23px; width: 22px; height: 22px; border-radius: 11px; background: var(--d7,#ffffff)"></span></button>
+              </sc-if>
+              <sc-if value="{{ v.off }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ v.toggle }}" aria-label="Mostrar" style="width: 48px; height: 28px; border: 0; border-radius: 14px; background: var(--d38,#b8c0ce); position: relative"><span style="position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 11px; background: var(--d7,#ffffff)"></span></button>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- Conexiones con gestores de tareas -->
+    <sc-if value="{{ mInteg }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ stop }}" role="dialog" aria-modal="true" aria-label="Conexiones" style="width: 600px; max-width: 100%; background: var(--d7,#ffffff); border-radius: 18px; padding: 26px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; align-items: center">
+          <h2 style="margin: 0; flex-grow: 1; font-size: 20px; font-weight: 800">Gestores de tareas</h2>
+          <button onClick="{{ closeModal }}" aria-label="Cerrar" style="width: 40px; height: 40px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 20px; line-height: 1; color: var(--d1,#101827)">×</button>
+        </div>
+        <div style="font-size: 13px; color: var(--d5,#5b6577)">Conectá la herramienta donde llevás cada trabajo. El panel traduce todo a un formato común (tareas, estados, responsables y pull requests), así que cambiar de herramienta no rompe tus reportes ni tu historial.</div>
+        <div>
+          <sc-for list="{{ proveedores }}" as="pv" hint-placeholder-count="5">
+            <div style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-top: 1px solid var(--d20,#eef1f5)">
+              <div style="flex-grow: 1">
+                <div style="font-weight: 700">{{ pv.name }}</div>
+                <div style="font-size: 12px; color: var(--d5,#5b6577)">{{ pv.desc }}</div>
+              </div>
+              <button onClick="{{ pv.go }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">{{ pv.label }}</button>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background: var(--d0,#f3f5f8); border-radius: 12px; padding: 14px 16px; font-size: 13px; color: var(--d31,#374151)">Cada trabajo se vincula a la herramienta que corresponda: un cliente puede estar en Jira y otro en Linear al mismo tiempo.</div>
+      </div>
+    </sc-if>
+
+    <!-- Nueva factura -->
+    <sc-if value="{{ mInvoice }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ stop }}" role="dialog" aria-modal="true" aria-label="Nueva factura" style="width: 520px; max-width: 100%; background: var(--d7,#ffffff); border-radius: 18px; padding: 26px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; align-items: center">
+          <h2 style="margin: 0; flex-grow: 1; font-size: 20px; font-weight: 800">Nueva factura</h2>
+          <button onClick="{{ closeModal }}" aria-label="Cerrar" style="width: 40px; height: 40px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 20px; line-height: 1; color: var(--d1,#101827)">×</button>
+        </div>
+        <div>
+          <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px">Tipo de cobro</div>
+          <div style="display: flex; gap: 8px; margin-bottom: 8px">
+            <sc-for list="{{ invTipo }}" as="t" hint-placeholder-count="2">
+              <div>
+                <sc-if value="{{ t.active }}" hint-placeholder-val="{{ false }}"><button onClick="{{ t.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid #0F766E; border-radius: 18px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">{{ t.label }}</button></sc-if>
+                <sc-if value="{{ t.inactive }}" hint-placeholder-val="{{ true }}"><button onClick="{{ t.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 18px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 13px; font-weight: 600">{{ t.label }}</button></sc-if>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size: 12px; color: var(--d5,#5b6577); margin-bottom: 16px">{{ invHint }}</div>
+          <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px">Cliente</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px">
+            <select onChange="{{ invClientesSel.set }}" aria-label="invClientes" style="height: 36px; min-width: 220px; max-width: 100%; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 9px; background: var(--d7,#ffffff); font-size: 13px; color: var(--d1,#101827)"><sc-for list="{{ invClientesSel.opts }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.label }}</option></sc-for></select>
+          </div>
+        </div>
+        <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700">Concepto
+          <input value="{{ inv.concepto }}" onChange="{{ setConcepto }}" placeholder="Ej.: Automatización de facturación · hito 2" style="height: 44px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px; color: var(--d1,#101827)">
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700">Monto (ARS)
+          <input value="{{ inv.monto }}" onChange="{{ setMontoInv }}" placeholder="1100000" style="height: 44px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px; color: var(--d1,#101827)">
+        </label>
+        <div>
+          <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px">Vence en</div>
+          <div style="display: flex; gap: 8px">
+            <sc-for list="{{ invVenc }}" as="v" hint-placeholder-count="3">
+              <div>
+                <sc-if value="{{ v.active }}" hint-placeholder-val="{{ false }}"><button onClick="{{ v.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid #0F766E; border-radius: 18px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">{{ v.label }}</button></sc-if>
+                <sc-if value="{{ v.inactive }}" hint-placeholder-val="{{ true }}"><button onClick="{{ v.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 18px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 13px; font-weight: 600">{{ v.label }}</button></sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div><div style="font-size: 13px; font-weight: 700; margin-bottom: 8px">Comprobante</div><div style="display: flex; flex-wrap: wrap; gap: 8px"><sc-for list="{{ invArca }}" as="a" hint-placeholder-count="4"><div>
+              <sc-if value="{{ a.active }}" hint-placeholder-val="{{ false }}"><button onClick="{{ a.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid #0F766E; border-radius: 18px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">{{ a.label }}</button></sc-if>
+              <sc-if value="{{ a.inactive }}" hint-placeholder-val="{{ true }}"><button onClick="{{ a.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 18px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 13px; font-weight: 600">{{ a.label }}</button></sc-if>
+            </div></sc-for></div><div style="font-size: 12px; color: var(--d5,#5b6577); margin-top: 8px">{{ invArcaHint }}</div></div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px">
+          <button onClick="{{ closeModal }}" style="height: 44px; padding: 0 18px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 14px; font-weight: 700; color: var(--d1,#101827)">Cancelar</button>
+          <button onClick="{{ saveInvoice }}" style="height: 44px; padding: 0 20px; border: 0; border-radius: 10px; background: #0F766E; color: #fff; font-size: 14px; font-weight: 700">Emitir factura</button>
+        </div>
+      </div>
+    </sc-if>
+
+  </div>
+</sc-if>
+
+</sc-if>
+
+<!-- ============ ACCESO Y ONBOARDING ============ -->
+<sc-if value="{{ inAuth }}" hint-placeholder-val="{{ false }}">
+  <div style="flex: 1 1 100%; min-height: 100vh; display: flex; flex-wrap: wrap">
+
+    <div style="flex: 1 1 420px; background: var(--d2,#101827); color: #E6EAF1; padding: 48px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; gap: 32px">
+      <div style="display: flex; align-items: center; gap: 12px">
+        <div style="width: 44px; height: 44px; border-radius: 12px; background: #0F766E; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; letter-spacing: -0.02em">360</div>
+        <div style="font-weight: 800; font-size: 18px; color: #fff; letter-spacing: -0.01em">Negocio 360</div>
+      </div>
+      <div style="max-width: 460px">
+        <h2 style="margin: 0; font-size: 36px; line-height: 1.15; letter-spacing: -0.03em; font-weight: 800; color: #fff">Todo tu negocio, de la conversación al cobro.</h2>
+        <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 14px; font-size: 15px; color: var(--d4,#b4bdcc)">
+          <div style="display: flex; gap: 12px"><span style="margin-top: 7px; width: 8px; height: 8px; border-radius: 4px; background: #5EEAD4; flex-shrink: 0"></span>Tus reuniones se transcriben y se convierten en tareas y seguimientos.</div>
+          <div style="display: flex; gap: 12px"><span style="margin-top: 7px; width: 8px; height: 8px; border-radius: 4px; background: #5EEAD4; flex-shrink: 0"></span>Servicios recurrentes, proyectos y cobros en un solo lugar, con tu herramienta de tareas si usás una.</div>
+          <div style="display: flex; gap: 12px"><span style="margin-top: 7px; width: 8px; height: 8px; border-radius: 4px; background: #5EEAD4; flex-shrink: 0"></span>Un portal para que cada cliente vea el avance sin escribirte.</div>
+        </div>
+      </div>
+      <div style="font-size: 12px; color: var(--d3,#8a96ab)">Prototipo con datos de ejemplo. Podés ingresar con cualquier email y contraseña.</div>
+    </div>
+
+    <div style="flex: 1 1 460px; display: flex; align-items: center; justify-content: center; padding: 32px; box-sizing: border-box">
+      <div style="width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 16px">
+
+        <!-- Login -->
+        <sc-if value="{{ aLogin }}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; flex-direction: column; gap: 16px">
+            <div>
+              <h1 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.02em">Ingresá a tu cuenta</h1>
+              <div style="margin-top: 4px; color: var(--d5,#5b6577)">Bienvenido de nuevo.</div>
+            </div>
+            <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700">Email
+              <input value="{{ authEmail }}" onChange="{{ setAuthEmail }}" placeholder="tu@email.com" style="height: 46px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px; color: var(--d1,#101827); background: var(--d7,#ffffff)">
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700">Contraseña
+              <input type="password" value="{{ authPass }}" onChange="{{ setAuthPass }}" placeholder="Tu contraseña" style="height: 46px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px; color: var(--d1,#101827); background: var(--d7,#ffffff)">
+            </label>
+            <sc-if value="{{ authHasError }}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; font-weight: 600; color: var(--d19,#b91c1c)">{{ authError }}</div></sc-if>
+            <button onClick="{{ doLogin }}" style="height: 48px; border: 0; border-radius: 12px; background: #0F766E; color: #fff; font-size: 15px; font-weight: 700">Ingresar</button>
+            <div style="display: flex; justify-content: space-between; font-size: 13px">
+              <button onClick="{{ goForgot }}" style="border: 0; background: transparent; padding: 8px 0; color: var(--d14,#0f766e); font-weight: 700">Olvidé mi contraseña</button>
+              <button onClick="{{ goMagic }}" style="border: 0; background: transparent; padding: 8px 0; color: var(--d14,#0f766e); font-weight: 700">Entrar con enlace por email</button>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; color: var(--d9,#8a94a6); font-size: 12px"><span style="flex-grow: 1; height: 1px; background: var(--d17,#e4e8ee)"></span>o<span style="flex-grow: 1; height: 1px; background: var(--d17,#e4e8ee)"></span></div>
+            <button onClick="{{ doGoogle }}" style="height: 48px; border: 1px solid var(--d6,#d5dbe5); border-radius: 12px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 15px; font-weight: 700">Continuar con Google</button>
+            <div style="text-align: center; font-size: 14px; color: var(--d5,#5b6577)">¿No tenés cuenta? <button onClick="{{ goSignup }}" style="border: 0; background: transparent; padding: 8px 0; color: var(--d14,#0f766e); font-weight: 700; font-size: 14px">Crear cuenta</button></div>
+            <div style="text-align: center; font-size: 13px; color: var(--d5,#5b6577); border-top: 1px solid var(--d8,#e4e8ee); padding-top: 12px">¿Sos cliente de un negocio? <button onClick="{{ goCliente }}" style="border: 0; background: transparent; padding: 8px 0; color: var(--d14,#0f766e); font-weight: 700; font-size: 13px">Acceso de clientes</button></div>
+          </div>
+        </sc-if>
+
+        <!-- Registro -->
+        <sc-if value="{{ aSignup }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 14px">
+            <div>
+              <h1 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.02em">Creá tu cuenta</h1>
+              <div style="margin-top: 4px; color: var(--d5,#5b6577)">En dos minutos tenés tu negocio ordenado.</div>
+            </div>
+            <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700">Tu nombre
+              <input value="{{ authName }}" onChange="{{ setAuthName }}" placeholder="Nombre y apellido" style="height: 46px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px; color: var(--d1,#101827); background: var(--d7,#ffffff)">
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700">Email
+              <input value="{{ authEmail }}" onChange="{{ setAuthEmail }}" placeholder="tu@email.com" style="height: 46px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px; color: var(--d1,#101827); background: var(--d7,#ffffff)">
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700">Contraseña
+              <input type="password" value="{{ authPass }}" onChange="{{ setAuthPass }}" placeholder="Mínimo 8 caracteres" style="height: 46px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px; color: var(--d1,#101827); background: var(--d7,#ffffff)">
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700">Nombre de tu negocio
+              <input value="{{ authBiz }}" onChange="{{ setAuthBiz }}" placeholder="Ej.: Estudio Pérez" style="height: 46px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px; color: var(--d1,#101827); background: var(--d7,#ffffff)">
+            </label>
+            <div>
+              <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px">¿A qué se dedica?</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px">
+                <select onChange="{{ rubrosSel.set }}" aria-label="rubros" style="height: 36px; min-width: 220px; max-width: 100%; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 9px; background: var(--d7,#ffffff); font-size: 13px; color: var(--d1,#101827)"><sc-for list="{{ rubrosSel.opts }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.label }}</option></sc-for></select>
+              </div>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 12px">
+              <sc-if value="{{ authTerms }}" hint-placeholder-val="{{ false }}"><button onClick="{{ toggleTerms }}" aria-label="Quitar aceptación" style="width: 28px; height: 28px; flex-shrink: 0; border: 0; border-radius: 8px; background: #0F766E; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg></button></sc-if>
+              <sc-if value="{{ noTerms }}" hint-placeholder-val="{{ true }}"><button onClick="{{ toggleTerms }}" aria-label="Aceptar términos" style="width: 28px; height: 28px; flex-shrink: 0; border: 2px solid var(--d21,#b8c0ce); border-radius: 8px; background: var(--d7,#ffffff)"></button></sc-if>
+              <div style="font-size: 13px; color: var(--d31,#374151)">Acepto los términos de uso y la política de privacidad, incluido el tratamiento de grabaciones de reuniones.</div>
+            </div>
+            <sc-if value="{{ authHasError }}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; font-weight: 600; color: var(--d19,#b91c1c)">{{ authError }}</div></sc-if>
+            <button onClick="{{ doSignup }}" style="height: 48px; border: 0; border-radius: 12px; background: #0F766E; color: #fff; font-size: 15px; font-weight: 700">Crear cuenta</button>
+            <div style="text-align: center; font-size: 14px; color: var(--d5,#5b6577)">¿Ya tenés cuenta? <button onClick="{{ goLogin }}" style="border: 0; background: transparent; padding: 8px 0; color: var(--d14,#0f766e); font-weight: 700; font-size: 14px">Ingresar</button></div>
+          </div>
+        </sc-if>
+
+        <!-- Recuperar contraseña -->
+        <sc-if value="{{ aForgot }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 16px">
+            <div>
+              <h1 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.02em">Recuperá tu contraseña</h1>
+              <div style="margin-top: 4px; color: var(--d5,#5b6577)">Te enviamos un enlace para crear una nueva.</div>
+            </div>
+            <sc-if value="{{ authNotSent }}" hint-placeholder-val="{{ true }}">
+              <div style="display: flex; flex-direction: column; gap: 16px">
+                <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700">Email
+                  <input value="{{ authEmail }}" onChange="{{ setAuthEmail }}" placeholder="tu@email.com" style="height: 46px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px; color: var(--d1,#101827); background: var(--d7,#ffffff)">
+                </label>
+                <sc-if value="{{ authHasError }}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; font-weight: 600; color: var(--d19,#b91c1c)">{{ authError }}</div></sc-if>
+                <button onClick="{{ sendReset }}" style="height: 48px; border: 0; border-radius: 12px; background: #0F766E; color: #fff; font-size: 15px; font-weight: 700">Enviar instrucciones</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ authSent }}" hint-placeholder-val="{{ false }}">
+              <div style="background: var(--d13,#e6f4f2); border-radius: 12px; padding: 16px; color: var(--d15,#0b3f3b)">Si {{ authEmail }} tiene una cuenta, le llegará un email con el enlace. Revisá también la carpeta de spam.</div>
+            </sc-if>
+            <button onClick="{{ goLogin }}" style="border: 0; background: transparent; padding: 8px 0; color: var(--d14,#0f766e); font-weight: 700; font-size: 14px; text-align: left">Volver a ingresar</button>
+          </div>
+        </sc-if>
+
+        <!-- Enlace mágico -->
