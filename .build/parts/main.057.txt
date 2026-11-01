@@ -1,0 +1,200 @@
+      pfE: s.pf.e, setPfE: (e) => self.setState({ pf: { ...s.pf, e: e.target.value } }),
+      pfT: s.pf.t, setPfT: (e) => self.setState({ pf: { ...s.pf, t: e.target.value } }), pfD: s.pf.d, setPfD: (e) => self.setState({ pf: { ...s.pf, d: e.target.value } }), pfCi: s.pf.ci, setPfCi: (e) => self.setState({ pf: { ...s.pf, ci: e.target.value } }), pfLi: s.pf.li, setPfLi: (e) => self.setState({ pf: { ...s.pf, li: e.target.value } }), pfCu: s.pf.cu, setPfCu: (e) => self.setState({ pf: { ...s.pf, cu: e.target.value } }), pfV: s.pf.v, setPfV: (e) => self.setState({ pf: { ...s.pf, v: e.target.value } }), pfNo: s.pf.no, setPfNo: (e) => self.setState({ pf: { ...s.pf, no: e.target.value } }),
+      guardarPersona: () => {
+        if (!s.pf.n.trim()) { self.say('Poné el nombre de la persona'); return; }
+        if (!s.pf.e.trim() && !s.pf.t.trim()) { self.say('Cargá al menos un medio de contacto: email o teléfono'); return; }
+        if (s.pf.e.trim() && s.pf.e.indexOf('@') < 0) { self.say('El email no parece válido'); return; }
+        const cta = ctaByName(s.pfCta); if (!cta) { self.setState({ modal: null }); return; }
+        cta.contactos.push([s.pf.n.trim(), s.pf.c.trim() || 'Contacto', s.pf.e.trim(), { t: s.pf.t.trim(), d: s.pf.d.trim(), ci: s.pf.ci.trim(), li: s.pf.li.trim(), cu: s.pf.cu.trim(), v: s.pf.v.trim(), no: s.pf.no.trim() }]);
+        const opps = s.pfOpp ? s.opps.map((o) => o.id === s.pfOpp ? { ...o, otros: (o.otros || []).concat([s.pf.n.trim()]) } : o) : s.opps;
+        self.setState({ modal: null, clv: s.clv + 1, opps: opps }); self.say('Persona agregada a ' + cta.nombre);
+      }, ...upVals, reuTabs: reuTabs, reuLista: s.reuView === 'lista', reuInsights: s.reuView === 'insights', gen: gen,
+      viewNewMeeting: () => self.setState({ modal: 'meeting', selMeeting: s.upLast || 4, upFase: 0, screen: 'reuniones' }),
+      sendReminderWa: () => { self.setState({ modal: null }); self.say('Recordatorio enviado por WhatsApp a ' + cb.cliente); },
+      sendReminderMail: () => { self.setState({ modal: null }); self.say('Recordatorio enviado por email a ' + cb.cliente); },
+      ch: ch, chIsNew: isNew, chModalTitle: isNewCh ? 'Nuevo canal de captación' : 'Configurar canal',
+      chStagesView: chStagesView, chCanDelete: !isNewCh && CHS.length > 1,
+      addStage: () => setSt(s.chStages.concat([{ id: nextId(), name: 'Nueva etapa', fase: 'conversacion' }])),
+      deleteChannel: () => {
+        if (s.opps.some((o) => o.canal === s.selChannel)) { self.say('Este canal tiene prospectos: movelos a otro canal antes de eliminarlo'); return; }
+        self.setState({ channels: CHS.filter((c) => c.id !== s.selChannel), filtro: s.filtro === s.selChannel ? 'todos' : s.filtro, modal: null });
+        self.say('Canal eliminado');
+      },
+      vistaFases: vistaFases,
+      hayPipeFiltro: !!fpipe, editarPipeLabel: editarPipeLabel, canalFiltros: canalFiltros, pipeVistas: pipeVistas, pipeResumen: pipeResumen, pfPipeLabel: pfPipeLabel, pfCanalLabel: pfCanalLabel, cierraPf: () => self.setState({ pfMenu: null }), pfPipeOpen: s.pfMenu === 'pipe', pfCanalOpen: s.pfMenu === 'canal', togglePfPipe: () => self.setState({ pfMenu: s.pfMenu === 'pipe' ? null : 'pipe' }), togglePfCanal: () => self.setState({ pfMenu: s.pfMenu === 'canal' ? null : 'canal' }), pq: s.pq || '', setPq: (e) => self.setState({ pq: e.target.value }), prospKpis: prospKpis, prospSeg: prospSeg, haySeg: prospSeg.length > 0, filasTabla: filasTabla, sinFilas: filasTabla.length === 0,
+      pipeTablero: s.pipeView === 'tablero', pipeTabla: s.pipeView === 'tabla',
+      mPipe: s.modal === 'pipe', pipeModalTitle: s.selPipe === 'nuevo' ? 'Nuevo proceso de venta' : 'Estados del proceso de venta',
+      pipeNombre: s.pnm, setPipeNombre: (e) => self.setState({ pnm: e.target.value }),
+      openPipeNew: () => self.setState({ modal: 'pipe', selPipe: 'nuevo', pnm: '', chStages: mkStages('En blanco') }),
+      editarPipe: () => { if (fpipe) self.setState({ modal: 'pipe', selPipe: fpipe.id, pnm: fpipe.name, chStages: fpipe.etapas.map((e) => ({ ...e })) }); },
+      pipeCanDelete: s.selPipe !== 'nuevo' && PIPS.length > 1,
+      deletePipe: () => {
+        if (s.opps.some((o) => pipeOf(o).id === s.selPipe)) { self.say('Este proceso de venta tiene prospectos: cerralos o movelos antes de eliminarlo'); return; }
+        self.setState({ pipes: PIPS.filter((p) => p.id !== s.selPipe), filtro: 'todos', modal: null }); self.say('Proceso de venta eliminado');
+      },
+      savePipe: () => {
+        const name = s.pnm.trim();
+        if (!name) { self.say('Ponele un nombre al pipeline'); return; }
+        const et = s.chStages.filter((e) => e.name.trim()).map((e) => ({ id: e.id, name: e.name.trim(), fase: e.fase }));
+        if (!et.length) { self.say('El proceso de venta necesita al menos un estado'); return; }
+        const nuevo = s.selPipe === 'nuevo'; const pid = nuevo ? 'p' + Date.now() : s.selPipe; const old = PIPS.find((p) => p.id === pid);
+        const pipes = nuevo ? PIPS.concat([{ id: pid, name: name, color: CH_COLORS[PIPS.length % CH_COLORS.length], etapas: et }]) : PIPS.map((p) => p.id === pid ? { ...p, name: name, etapas: et } : p);
+        const opps = s.opps.map((o) => {
+          if (pipeOf(o).id !== pid || et.some((e) => e.id === o.stage)) return o;
+          const of = old ? ((old.etapas.find((e) => e.id === o.stage) || {}).fase) : null;
+          return { ...o, pipe: pid, stage: (et.find((e) => e.fase === of) || et[0]).id };
+        });
+        self.setState({ pipes: pipes, opps: opps, modal: null, filtro: pid });
+        self.say(nuevo ? 'Proceso de venta creado con sus propias etapas' : 'Proceso de venta guardado');
+      },
+      fichaGanarLabel: so && CLIENTES.some((c) => c.nombre === so.empresa) ? 'Ampliación ganada' : 'Ganado: pasar a clientes',
+      fichaAddPersona: () => { if (so) self.setState({ modal: 'persona', pf: PF0(), pfCta: so.empresa, pfOpp: so.id }); },
+      fichaGanar: () => {
+        if (!so) return;
+        let c = CLIENTES.find((x) => x.nombre === so.empresa);
+        const nuevoCli = !c;
+        if (!c) {
+          const p = PCTAS.find((x) => x.nombre === so.empresa);
+          if (p) { PCTAS.splice(PCTAS.indexOf(p), 1); p.desde = 'oct 2026'; p.canal = so.canal; CLIENTES.push(p); c = p; }
+          else { c = addCuenta({ nombre: so.empresa, tipo: 'Empresa', estado: 'cliente', canal: so.canal }); }
+        }
+        [so.contacto].concat(so.otros || []).forEach((n) => { if (!c.contactos.some((p) => p[0] === n)) c.contactos.push([n, 'Contacto', '']); });
+        self.setState({ opps: s.opps.filter((o) => o.id !== so.id), modal: null, clv: s.clv + 1 });
+        self.say(nuevoCli ? so.empresa + ' ahora es cliente, con sus ' + c.contactos.length + ' personas' : 'Ampliación ganada con ' + c.nombre);
+      },
+      fichaPerder: () => { if (!so) return; self.setState({ opps: s.opps.filter((o) => o.id !== so.id), modal: null }); self.say('Prospecto cerrado como perdido'); },
+      reglas: reglas, plantillas: plantillas,
+      chPipes: PIPS.map((p) => [p.id, p.name]).concat([['__nuevo', '+ Proceso de venta propio nuevo']]).map((o) => ({ name: o[1], active: curPipe === o[0], inactive: curPipe !== o[0], pick: () => self.setState({ chf: { ...s.chf, pipe: o[0] } }) })),
+      saveChannel: () => {
+        const name = s.chf.name.trim();
+        if (!name) { self.say('Ponele un nombre al canal'); return; }
+        let chs; const cidN = 'c' + Date.now();
+        let pipesN = PIPS; let pipeId = curPipe;
+        if (curPipe === '__nuevo' || !curPipe) { pipeId = 'pl_' + cidN; pipesN = PIPS.concat([{ id: pipeId, name: 'Proceso de ' + name, color: CH_COLORS[PIPS.length % CH_COLORS.length], etapas: mkStages('En blanco') }]); }
+        if (isNewCh) {
+          chs = CHS.concat([{ id: cidN, pipe: pipeId, name: name, tipo: s.chf.tipo.trim() || 'Otro', color: CH_COLORS[CHS.length % CH_COLORS.length], leads: 0, reuniones: 0, ventas: 0, ingresoN: 0, costoN: 0, costoTxt: s.chf.costo.trim() || 'Sin costo cargado', roi: 'Sin datos aún', meta: s.chf.meta.trim() || 'Sin objetivo definido', etapas: [] }]);
+        } else {
+          chs = CHS.map((c) => c.id === s.selChannel ? { ...c, name: name, tipo: s.chf.tipo.trim() || c.tipo, costoTxt: s.chf.costo.trim() || c.costoTxt, meta: s.chf.meta.trim() || c.meta, pipe: pipeId } : c);
+        }
+        self.setState({ channels: chs, pipes: pipesN, modal: null });
+        self.say(isNewCh ? 'Canal creado' : 'Canal guardado');
+      },
+      inv: s.inv, invClientes: invClientes, invVenc: invVenc, invArca: invArca, invArcaHint: invArcaHint,
+      setConcepto: (e) => self.setState({ inv: { ...s.inv, concepto: e.target.value } }),
+      setMontoInv: (e) => self.setState({ inv: { ...s.inv, monto: e.target.value } }),
+      saveInvoice: () => {
+        const monto = parseInt(String(s.inv.monto).replace(/\D/g, ''), 10) || 0;
+        if (!monto) { self.say('Ingresá el monto de la factura'); return; }
+        const VD = { '7 días': '25 oct', '15 días': '02 nov', '30 días': '17 nov' };
+        const nueva = { id: '00' + (45 + s.cobros.length - 5), cliente: s.inv.cliente, concepto: s.inv.concepto.trim() || 'Servicios profesionales', venc: VD[s.inv.venc], monto: monto, estado: 'pendiente', cae: (s.inv.cmp || 'arca') === 'arca' ? '74' + String(Math.floor(100000000000 + Math.random() * 899999999999)) : '' };
+        const esAbono = s.inv.tipo === 'abono';
+        const nuevosAbonos = esAbono ? s.abonos.concat([{ id: s.abonos.length + 10, cliente: s.inv.cliente, nombre: s.inv.concepto.trim() || 'Abono mensual', fee: monto, dia: 1, hu: 0, ht: 20, renov: 'Renueva en 12 meses', plan: [['Definir el plan del mes', false]], fuera: [], jira: null }]) : s.abonos;
+        self.setState({ cobros: [nueva].concat(s.cobros), abonos: nuevosAbonos, modal: null, screen: 'finanzas', inv: { cliente: 'Ibarra Contadores', concepto: '', monto: '', venc: '30 días', tipo: 'unica', cmp: 'arca' } });
+        self.say(esAbono ? 'Abono creado: se factura todos los meses' : (nueva.cae ? 'Factura electrónica emitida a ' + s.inv.cliente + ' · CAE ' + nueva.cae : 'Cobro registrado para ' + s.inv.cliente));
+      },
+
+      modHoras: !!s.mods.horas, openHoras: () => self.setState({ modal: 'horas', hr: { k: '', h: '', nota: '' }, newMenu: false }), mHoras: s.modal === 'horas', hrJobsL: hrJobsL, hrQuick: hrQuick, hrH: hr.h, setHrH: (e) => hrSet({ h: e.target.value.replace(/[^0-9.,]/g, '') }), hrNota: hr.nota, setHrNota: (e) => hrSet({ nota: e.target.value }), hrGuardar: hrGuardar,
+      mPropCli: s.modal === 'propCli', pcCliente: pcP.cliente, pcContacto: pcP.contacto, pcTitulo: pcP.titulo, pcMonto: fmt(pcP.monto), pcVence: pcP.vence ? 'Vence el ' + pcP.vence : 'Sin vencimiento', pcNombre: s.pcNombre || '', setPcNombre: (e) => self.setState({ pcNombre: e.target.value }), pcOk: !!s.pcOk, pcNoOk: !s.pcOk, togglePcOk: () => self.setState({ pcOk: !s.pcOk }), pcAceptar: pcAceptar, pcCambios: () => { self.setState({ modal: null }); self.say('El cliente te va a escribir sus cambios: queda en Mensajes'); },
+      obShow: !s.obHide && obHechos < 4, obHechos: obHechos, obPct: obHechos * 25, obSteps: obPasos.map((o) => ({ t: o.t, sub: o.sub, done: o.done, todo: !o.done, cta: o.cta, go: o.go })), obOcultar: () => self.setState({ obHide: true }),
+      rwHoras: rwHoras, rwOn: !!rw.on, rwOff: !rw.on, rwToggle: rwToggle, rwEstado: rw.on ? 'Activo · todos los días a las ' + rw.hora + ' al WhatsApp de ' + s.profile.nombre.split(' ')[0] + '.' : 'Desactivado. Se envía solo a tu número, nunca a tus clientes.',
+      rwPreview: 'Buen día, ' + s.profile.nombre.split(' ')[0] + '. Tu día:\n1) Cobrar a Molina $ 780.000, vencido hace 6 días\n2) Aprobar 2 borradores (cobro y seguimiento)\n3) Retomar a Hernán Costa: 9 días sin contacto\n4) Mañana 10:00 · Seguimiento con Ibarra Contadores\n5) 5 mensajes sin responder\nRespondé OK y te los abro.',
+      hasToast: !!s.toast, toast: s.toast,
+      // ---- acceso y cuenta
+      themeAttr: s.dark ? 'dark' : 'light',
+      inApp: s.auth === null, inAuth: s.auth !== null, isClient: client, notClient: !client,
+      aLogin: s.auth === 'login', aSignup: s.auth === 'signup', aForgot: s.auth === 'forgot', aMagic: s.auth === 'magic', aCliente: s.auth === 'cliente', aOnb: s.auth === 'onb',
+      authEmail: s.authEmail, authPass: s.authPass, authName: s.authName, authBiz: s.authBiz, authTerms: s.authTerms, noTerms: !s.authTerms,
+      authSent: s.authSent, authNotSent: !s.authSent, authError: s.authError, authHasError: !!s.authError,
+      setAuthEmail: (e) => self.setState({ authEmail: e.target.value, authError: '' }),
+      setAuthPass: (e) => self.setState({ authPass: e.target.value, authError: '' }),
+      setAuthName: (e) => self.setState({ authName: e.target.value, authError: '' }),
+      setAuthBiz: (e) => self.setState({ authBiz: e.target.value, authError: '' }),
+      toggleTerms: () => self.setState({ authTerms: !s.authTerms, authError: '' }),
+      rubros: rubros,
+      goLogin: goAuth('login'), goSignup: goAuth('signup'), goForgot: goAuth('forgot'), goMagic: goAuth('magic'), goCliente: goAuth('cliente', { authEmail: 'joaquin@ejemplo.com' }),
+      doLogin: () => {
+        if (!validEmail(s.authEmail.trim())) { authErr('Ingresá un email válido.'); return; }
+        if (!s.authPass) { authErr('Ingresá tu contraseña.'); return; }
+        enterOwner('Bienvenido de nuevo');
+      },
+      doGoogle: () => enterOwner('Ingresaste con Google'),
+      sendReset: () => { if (!validEmail(s.authEmail.trim())) { authErr('Ingresá un email válido.'); return; } self.setState({ authSent: true, authError: '' }); },
+      sendMagic: () => { if (!validEmail(s.authEmail.trim())) { authErr('Ingresá un email válido.'); return; } self.setState({ authSent: true, authError: '' }); },
+      openMagic: () => enterOwner('Ingresaste con el enlace del email'),
+      sendCliente: () => {
+        const em = s.authEmail.trim().toLowerCase();
+        if (!validEmail(em)) { authErr('Ingresá un email válido.'); return; }
+        if (!s.accesos.some((a) => a.email.toLowerCase() === em)) { authErr('Ese email no tiene una invitación. Pedile a tu proveedor que te invite. En esta demo probá con joaquin@ejemplo.com.'); return; }
+        self.setState({ authSent: true, authError: '' });
+      },
+      openCliente: () => {
+        const em = s.authEmail.trim().toLowerCase();
+        const a = s.accesos.find((x) => x.email.toLowerCase() === em) || s.accesos[1];
+        const r = ROLES.find((x) => x[1] === a.rol) || ROLES[1];
+        self.setState({ auth: null, session: 'cliente', clienteNombre: a.nombre, screen: 'portal', selPortal: 1, portalRol: r[0], modal: null, authSent: false, authError: '' });
+        self.say('Ingresaste como ' + a.nombre);
+      },
+      doSignup: () => {
+        if (!s.authName.trim()) { authErr('Ingresá tu nombre.'); return; }
+        if (!validEmail(s.authEmail.trim())) { authErr('Ingresá un email válido.'); return; }
+        if (s.authPass.length < 8) { authErr('La contraseña debe tener al menos 8 caracteres.'); return; }
+        if (!s.authBiz.trim()) { authErr('Ingresá el nombre de tu negocio.'); return; }
+        if (!s.authTerms) { authErr('Tenés que aceptar los términos para continuar.'); return; }
+        self.setState({ auth: 'onb', onbStep: 1, session: 'owner', mods: RUBRO_MODS[s.authRubro] || RUBRO_MODS.otr, profile: { nombre: s.authName.trim(), email: s.authEmail.trim() }, biz: { nombre: s.authBiz.trim() }, equipo: [{ nombre: s.authName.trim(), email: s.authEmail.trim(), rol: 'Administrador' }], authError: '', authPass: '' });
+      },
+      onbStep: s.onbStep, onbPct: Math.round(s.onbStep / 3 * 100), onb1: s.onbStep === 1, onb2: s.onbStep === 2, onb3: s.onbStep === 3,
+      onbMonedas: onbMonedas, onbCobros: onbCobros, onbCanales: onbCanales, onbConex: onbConex,
+      onbNextLabel: s.onbStep === 3 ? 'Entrar a mi espacio' : 'Continuar',
+      onbBack: () => { if (s.onbStep > 1) self.setState({ onbStep: s.onbStep - 1 }); else self.setState({ auth: 'signup' }); },
+      onbNext: () => {
+        if (s.onbStep < 3) { self.setState({ onbStep: s.onbStep + 1 }); return; }
+        self.setState({ auth: null, screen: 'hoy', moneda: s.onbMoneda === 'usd' ? 'usd' : 'ars' });
+        self.say('Listo. Cargamos datos de ejemplo para que explores; los podés borrar cuando quieras.');
+      },
+      bizName: s.biz.nombre, firstName: userName.split(' ')[0], userName: userName, userIni: initials(userName), userSub: client ? 'Acceso de cliente' : 'Plan ' + plan.name,
+      userMenu: s.userMenu, userItems: userItems, toggleUserMenu: () => self.setState({ userMenu: !s.userMenu, bell: false, newMenu: false }),
+      // ---- configuración
+      isInformes: s.screen === 'informes', infRedTabs: s.screen === 'informes' && s.infDash === 'red', isEjecuciones: s.screen === 'ejecuciones',
+      infShowTabs: s.infDash !== 'red' && s.infDash !== 'aprende', infInsights: s.infDash === 'insights', infClasico: s.infDash !== 'insights' && s.infDash !== 'reportes' && s.infDash !== 'red' && s.infDash !== 'aprende', infRed: s.infDash === 'red', infAprende: s.infDash === 'aprende', infReportes: s.infDash === 'reportes', bz: Object.assign({}, bizI, { items: bizI.list }), hoyIns: bizI.list.filter((x) => x.sevTxt !== 'Va bien').slice(0, 3), verInsights: () => self.setState({ screen: 'informes', infDash: 'insights' }), infTabs: infTabs, infKpis: infKpis, infPanels: inf.panels,
+      ejecKpis: ejecKpis, ejecFiltros: ejecFiltros, ejecs: ejecs, ejecVacio: ejecs.length === 0,
+      asTabs: asTabs2, asDocs: s.asTab === 'docs', asCapas: s.asTab === 'capas', asAgentes: s.asTab === 'agentes',
+      docs: docsView2, docsN: s.docs.length, capas: capasView, docFiltros: docFiltros, docKpis: docKpis, agentesL: agentesView.filter((a) => s.agMas || a.clave), agMasN: agentesView.length - 3, agMasLbl: s.agMas ? 'Ocultar los demás agentes' : 'Ver los otros ' + (agentesView.length - 3) + ' agentes (avanzado)', agMasToggle: () => self.setState({ agMas: !s.agMas }), agKpis: agKpis,
+      goEjec: () => self.setState({ screen: 'ejecuciones' }), goIA: () => self.setState({ iaOpen: true }), goSocial: () => self.setState({ screen: 'asistente', asTab: 'agentes' }),
+      iaResumen: iaResumen, iaOpen: !!s.iaOpen && !client, iaClosed: !s.iaOpen && !client, iaCtx: T2[1], iaSug: iaSug, chatRev: chatRev, chatVacio: s.chat.length <= 1,
+      abrirIA: () => self.setState({ iaOpen: true, bell: false, newMenu: false }), cerrarIA: () => self.setState({ iaOpen: false }),
+      irAgentes: () => self.setState({ screen: 'asistente', asTab: 'agentes' }), irConocimiento: () => self.setState({ screen: 'asistente', asTab: 'docs' }), shubOff: s.shub.estado === 'off', shubOn: s.shub.estado === 'listo', shubTog: shubTog, shubKey: shubKey,
+      shubTxt: s.shub.estado === 'listo' ? 'Listo para conectar' : 'No conectado',
+      shubPrep: () => { self.setState({ shub: { ...s.shub, estado: 'listo', key: String(Math.floor(1000 + Math.random() * 9000)) } }); self.say('Clave de conexión generada. Pegala en el Social Hub cuando esté disponible.'); },
+      shubCopy: () => self.say('Clave copiada'), shubOffBtn: () => self.setState({ shub: { ...s.shub, estado: 'off', key: '' } }),
+      mDoc: s.modal === 'doc', abrirDoc: () => self.setState({ modal: 'doc', df: { nombre: '', tipo: 'Documento', alcance: '', texto: '', archivo: '' } }),
+      dfNombre: s.df.nombre, setDfNombre: (e) => setDf('nombre', e.target.value), dfTexto: s.df.texto, setDfTexto: (e) => setDf('texto', e.target.value),
+      dfTipo: dfTipo, dfAlc: dfAlc, dfValid: dfValid, dfInvalid: !dfValid, dfSave: dfSave, dfArchivo: s.df.archivo, dfHayArchivo: !!s.df.archivo, dfSinArchivo: !s.df.archivo,
+      dfAdjuntar: () => setDf('archivo', 'documento.pdf'), dfQuitarArchivo: () => setDf('archivo', ''),
+      isConfig: s.screen === 'config', cfgTabs: cfgTabs, cfgGrupos: cfgGrupos, cfgActual: cfgActual, cfgEnInicio: cfgTabActual === 'inicio', cfgFueraInicio: cfgTabActual !== 'inicio', cfgIrInicio: () => self.setState({ cfgTab: 'inicio' }), pl: pl, rep: rep, permisos: permisos, cFuncs: cfgTabActual === 'funcs', cConex: cfgTabActual === 'conex', cIA: cfgTabActual === 'ia', cDatos: cfgTabActual === 'datos', cApi: cfgTabActual === 'api', cAud: cfgTabActual === 'aud', cEstado: cfgTabActual === 'estado', cEsp: cfgTabActual === 'esp', cSaOrgs: cfgTabActual === 'sa_orgs', cSaFuncs: cfgTabActual === 'sa_funcs', cSaIA: cfgTabActual === 'sa_ia', cSaInteg: cfgTabActual === 'sa_integ', cSaRep: cfgTabActual === 'sa_rep', cSaInfra: cfgTabActual === 'sa_infra', cSaAud: cfgTabActual === 'sa_aud', integs: integs, automs: automs, tonosCfg: tonosCfg,
+      aprobar: s.aprobar, noAprobar: !s.aprobar, toggleAprobar: () => self.setState({ aprobar: !s.aprobar }),
+      cCanales: s.screen === 'config' && cfgTabActual === 'canales', cInteg: false, cAuto: cfgTabActual === 'auto',
+      cPerfil: cfgTabActual === 'perfil', cNegocio: cfgTabActual === 'negocio', cEquipo: cfgTabActual === 'equipo', cPlan: cfgTabActual === 'plan', cNotif: cfgTabActual === 'notif', cSeg: cfgTabActual === 'seg',
+      profile: s.profile, biz: s.biz, idiomas: idiomas, cfgMonedas: cfgMonedas, cfgDias: cfgDias, cfgColores: cfgColores,
+      setPerfilNombre: (e) => self.setState({ profile: { ...s.profile, nombre: e.target.value } }),
+      setPerfilEmail: (e) => self.setState({ profile: { ...s.profile, email: e.target.value } }),
+      setBizNombre: (e) => self.setState({ biz: { ...s.biz, nombre: e.target.value } }),
+      saveCfg: () => self.say('Cambios guardados'),
+      equipo: equipoView, teamEmail: s.teamEmail, setTeamEmail: (e) => self.setState({ teamEmail: e.target.value }),
+      inviteTeam: () => {
+        const em = s.teamEmail.trim();
+        if (!validEmail(em)) { self.say('Ingresá un email válido'); return; }
+        self.setState({ equipo: s.equipo.concat([{ nombre: em, email: em, rol: 'Miembro (invitación pendiente)' }]), teamEmail: '' });
+        self.say('Invitación enviada a ' + em);
+      },
+      usos: usos, planes: planesView, changePago: () => self.say('Abriendo el medio de pago para actualizarlo'),
+      notifs: notifsView, sesiones: sesionesView, retenciones: retenciones,
+      dosPasos: s.dosPasos, noDosPasos: !s.dosPasos, toggleDosPasos: () => { self.setState({ dosPasos: !s.dosPasos }); self.say(s.dosPasos ? 'Verificación en dos pasos desactivada' : 'Verificación en dos pasos activada'); },
+      changePass: () => self.say('Te enviamos un email para elegir una nueva contraseña'),
+      exportData: () => self.say('Preparando la exportación: te llega por email en unos minutos'),
+      deleteAccount: () => self.say('Por seguridad, te pedimos confirmar por email antes de eliminar la cuenta')
+    });
+  }
+}
+</script>
+</body>
+</html>
