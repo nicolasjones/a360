@@ -1,0 +1,229 @@
+                <span style="display: block; margin-top: 4px; font-size: 12px; color: var(--d9,#8a94a6)">{{ p.estados }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ pipeTablero }}" hint-placeholder-val="{{ true }}">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; align-items: start">
+        <sc-for list="{{ columnas }}" as="col" hint-placeholder-count="4">
+          <section style="background: var(--d24,#e9edf3); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 10px">
+            <div style="display: flex; align-items: center; gap: 8px; padding: 4px 6px">
+              <span style="width: 10px; height: 10px; border-radius: 5px; background: {{ col.color }}"></span>
+              <span style="font-weight: 800">{{ col.name }}</span>
+              <span style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">{{ col.count }}</span>
+              <span style="flex-grow: 1"></span>
+              <span style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">{{ col.total }}</span>
+            </div>
+            <sc-if value="{{ col.empty }}" hint-placeholder-val="{{ false }}">
+              <div style="padding: 20px 10px; text-align: center; font-size: 13px; color: var(--d5,#5b6577)">Sin prospectos acá</div>
+            </sc-if>
+            <sc-for list="{{ col.items }}" as="o" hint-placeholder-count="2">
+              <div style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 12px; overflow: hidden">
+                <button onClick="{{ o.open }}" style="width: 100%; display: block; text-align: left; padding: 14px 14px 10px; border: 0; background: transparent; color: var(--d1,#101827)">
+                  <span style="display: flex; align-items: center; gap: 10px">
+                    <span style="width: 34px; height: 34px; border-radius: 17px; background: var(--d13,#e6f4f2); color: var(--d16,#0b5f58); font-weight: 800; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0">{{ o.ini }}</span>
+                    <span style="flex: 1; min-width: 0"><span style="display: block; font-weight: 800">{{ o.contacto }}</span><span style="display: block; font-size: 13px; color: var(--d5,#5b6577)">{{ o.empresa }}</span></span>
+                    <span style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 10px; background: {{ o.tempBg }}; color: {{ o.tempFg }}">{{ o.tempLabel }}</span>
+                  </span>
+                  <span style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px">
+                    <span style="font-weight: 800">{{ o.monto }}</span>
+                    <span style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: {{ o.canalBg }}; color: {{ o.canalFg }}">{{ o.canal }}</span>
+                    <sc-if value="{{ o.esCli }}" hint-placeholder-val="{{ false }}"><span style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: var(--d29,#ede9fe); color: var(--d30,#6d28d9)">Cliente actual</span></sc-if>
+                  </span>
+                  <sc-if value="{{ o.showEtapa }}" hint-placeholder-val="{{ true }}"><span style="display: block; margin-top: 8px; font-size: 12px; color: var(--d5,#5b6577)"><b style="color: {{ o.pipeColor }}">{{ o.pipe }}</b> · {{ o.etapa }}</span></sc-if>
+                  <span style="display: block; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--d20,#eef1f5); font-size: 12px; color: var(--d5,#5b6577)"><b style="color: var(--d1,#101827)">Próximo:</b> {{ o.prox }} · {{ o.prob }} de probabilidad</span>
+                </button>
+                <div style="display: flex; align-items: center; gap: 8px; padding: 0 14px 12px">
+                  <sc-if value="{{ o.stale }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 700; color: var(--d28,#b45309)">{{ o.dias }} sin contacto</span></sc-if>
+                  <sc-if value="{{ o.fresh }}" hint-placeholder-val="{{ true }}"><span style="font-size: 12px; color: var(--d5,#5b6577)">{{ o.dias }}</span></sc-if>
+                  <span style="flex-grow: 1"></span>
+                  <sc-if value="{{ o.canAdvance }}" hint-placeholder-val="{{ true }}"><button onClick="{{ o.advance }}" style="height: 30px; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d1,#101827)">Avanzar</button></sc-if>
+                </div>
+              </div>
+            </sc-for>
+            <sc-if value="{{ col.hayMas }}" hint-placeholder-val="{{ false }}"><button onClick="{{ col.verMas }}" style="height: 34px; border: 1px dashed var(--d21,#b8c0ce); border-radius: 10px; background: transparent; color: var(--d5,#5b6577); font-size: 12px; font-weight: 700">{{ col.masLabel }}</button></sc-if>
+            <sc-if value="{{ col.hayMenos }}" hint-placeholder-val="{{ false }}"><button onClick="{{ col.verMenos }}" style="height: 34px; border: 0; background: transparent; color: var(--d5,#5b6577); font-size: 12px; font-weight: 700">Ver menos</button></sc-if>
+          </section>
+        </sc-for>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ pipeTabla }}" hint-placeholder-val="{{ false }}">
+        <div style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; overflow: auto">
+          <div style="min-width: 760px">
+            <div style="display: grid; grid-template-columns: 1.6fr 1.2fr 1.2fr 1fr 1fr 0.8fr 0.8fr; gap: 10px; padding: 12px 18px; background: var(--d25,#f8fafc); font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)"><span>Prospecto</span><span>Proceso de venta</span><span>Etapa</span><span>Fase</span><span>Cómo llegó</span><span>Monto</span><span>Último contacto</span></div>
+            <sc-for list="{{ filasTabla }}" as="r" hint-placeholder-count="5">
+              <div style="border-top: 1px solid var(--d20,#eef1f5); background: var(--d7,#ffffff)">
+                <div style="display: grid; grid-template-columns: 1.6fr 1.2fr 1.2fr 1fr 1fr 0.8fr 0.8fr; gap: 10px; padding: 10px 18px; align-items: center; font-size: 13px; color: var(--d1,#101827)">
+                  <button onClick="{{ r.open }}" style="border: 0; background: transparent; padding: 0; text-align: left; font-size: 13px; color: var(--d1,#101827)"><b>{{ r.contacto }}</b><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">{{ r.empresa }}</span></button>
+                  <span style="font-weight: 700; color: {{ r.pipeColor }}">{{ r.pipe }}</span>
+                  <span>{{ r.etapa }}</span>
+                  <span><button onClick="{{ r.toggleSt }}" aria-label="Cambiar fase" style="height: 32px; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: {{ r.faseColor }}33; font-size: 12px; font-weight: 700; color: var(--d1,#101827); display: inline-flex; align-items: center; gap: 6px">{{ r.fase }}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--d5,#5b6577)" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button></span>
+                  <span>{{ r.canal }}</span>
+                  <span style="font-weight: 700">{{ r.monto }}</span>
+                  <span style="color: var(--d5,#5b6577)">{{ r.dias }}</span>
+                </div>
+                <sc-if value="{{ r.stOpen }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding: 8px 18px 12px; background: var(--d25,#f8fafc); display: flex; flex-wrap: wrap; align-items: center; gap: 6px">
+                    <span style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">Pasar a la fase:</span>
+                    <sc-for list="{{ r.stOpts }}" as="o" hint-placeholder-count="5"><div>
+                      <sc-if value="{{ o.active }}" hint-placeholder-val="{{ false }}"><button onClick="{{ o.pick }}" style="height: 30px; padding: 0 12px; border: 1px solid #101827; border-radius: 15px; background: var(--d2,#101827); color: #fff; font-size: 12px; font-weight: 700">{{ o.label }}</button></sc-if>
+                      <sc-if value="{{ o.inactive }}" hint-placeholder-val="{{ true }}"><button onClick="{{ o.pick }}" style="height: 30px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 15px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 12px; font-weight: 600">{{ o.label }}</button></sc-if>
+                    </div></sc-for>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+            <sc-if value="{{ sinFilas }}" hint-placeholder-val="{{ false }}"><div style="padding: 24px; text-align: center; color: var(--d5,#5b6577); font-size: 13px">No hay prospectos con estos filtros.</div></sc-if>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+    </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ========== REUNIONES ========== -->
+  <sc-if value="{{ isReuniones }}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; flex-direction: column; gap: 18px">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px">
+        <div style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 16px 20px">
+          <div style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">Reuniones este mes</div>
+          <div style="margin-top: 4px; font-size: 24px; font-weight: 800">{{ nReuniones }}</div>
+        </div>
+        <div style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 16px 20px">
+          <div style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">Horas transcriptas</div>
+          <div style="margin-top: 4px; font-size: 24px; font-weight: 800">{{ nHorasTr }}</div>
+        </div>
+        <div style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 16px 20px">
+          <div style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">Compromisos abiertos</div>
+          <div style="margin-top: 4px; font-size: 24px; font-weight: 800">{{ nCompromisos }}</div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+        <div style="display: flex; gap: 8px">
+          <sc-for list="{{ reuTabs }}" as="t" hint-placeholder-count="2">
+            <div>
+              <sc-if value="{{ t.active }}" hint-placeholder-val="{{ true }}"><button onClick="{{ t.pick }}" style="height: 44px; padding: 0 16px; border: 0; border-radius: 12px; background: var(--d2,#101827); color: #fff; font-size: 14px; font-weight: 700">{{ t.label }}</button></sc-if>
+              <sc-if value="{{ t.inactive }}" hint-placeholder-val="{{ false }}"><button onClick="{{ t.pick }}" style="height: 44px; padding: 0 16px; border: 1px solid var(--d6,#d5dbe5); border-radius: 12px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 14px; font-weight: 600">{{ t.label }}</button></sc-if>
+            </div>
+          </sc-for>
+        </div>
+        <label style="flex: 1 1 260px; display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 14px; background: var(--d7,#ffffff); border: 1px solid var(--d6,#d5dbe5); border-radius: 12px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--d5,#5b6577)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M11 18a7 7 0 100-14 7 7 0 000 14zM20 20l-4-4"></path></svg>
+          <input value="{{ q }}" onChange="{{ setQ }}" placeholder="Buscar: cliente, persona, tema, compromiso" aria-label="Buscar en reuniones" style="flex-grow: 1; border: 0; outline: 0; font-size: 14px; background: transparent; color: var(--d1,#101827)">
+        </label>
+        <div style="display: flex; background: var(--d24,#e9edf3); border-radius: 10px; padding: 3px">
+              <sc-for list="{{ reuFormas }}" as="v" hint-placeholder-count="2">
+                <div>
+                  <sc-if value="{{ v.active }}" hint-placeholder-val="{{ true }}"><button onClick="{{ v.pick }}" style="height: 32px; padding: 0 14px; border: 0; border-radius: 8px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 12px; font-weight: 800">{{ v.label }}</button></sc-if>
+                  <sc-if value="{{ v.inactive }}" hint-placeholder-val="{{ false }}"><button onClick="{{ v.pick }}" style="height: 32px; padding: 0 14px; border: 0; border-radius: 8px; background: transparent; color: var(--d5,#5b6577); font-size: 12px; font-weight: 700">{{ v.label }}</button></sc-if>
+                </div>
+              </sc-for>
+            </div>
+            <button onClick="{{ openUpload }}" style="height: 44px; padding: 0 18px; border: 0; border-radius: 12px; background: #0F766E; color: #fff; font-size: 14px; font-weight: 700">Subir reunión</button>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+            <sc-if value="{{ fRe.conQ }}" hint-placeholder-val="{{ true }}"><input value="{{ fRe.q }}" onChange="{{ fRe.setQ }}" placeholder="{{ fRe.ph }}" aria-label="Buscar" style="flex: 1 1 200px; max-width: 320px; height: 34px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 9px; font-size: 13px; color: var(--d1,#101827); background: var(--d7,#ffffff)"></sc-if>
+            <sc-for list="{{ fRe.dds }}" as="d" hint-placeholder-count="4"><div style="position: relative"><button onClick="{{ d.toggle }}" style="height: 34px; padding: 0 12px; border: 1px solid {{ d.bd }}; border-radius: 9px; background: {{ d.bg }}; color: {{ d.fg }}; font-size: 13px; font-weight: 600; white-space: nowrap">{{ d.label }} ▾</button><sc-if value="{{ d.open }}" hint-placeholder-val="{{ false }}"><div style="position: absolute; top: 38px; left: 0; z-index: 30; min-width: 220px; max-height: 280px; overflow: auto; background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 10px; box-shadow: 0 8px 24px rgba(16,24,39,0.12); padding: 4px"><sc-for list="{{ d.items }}" as="i" hint-placeholder-count="4"><button onClick="{{ i.pick }}" style="display: flex; width: 100%; align-items: center; gap: 8px; height: 32px; padding: 0 10px; border: 0; border-radius: 7px; background: transparent; color: var(--d1,#101827); font-size: 13px; font-weight: {{ i.fw }}; text-align: left"><span style="width: 14px; color: var(--d14,#0f766e)">{{ i.mark }}</span>{{ i.label }}</button></sc-for></div></sc-if></div></sc-for>
+            <span style="flex: 1"></span><span style="font-size: 12px; color: var(--d5,#5b6577)">{{ fRe.res }}</span>
+            <sc-if value="{{ fRe.hayAct }}" hint-placeholder-val="{{ false }}"><button onClick="{{ fRe.limpiar }}" style="height: 28px; padding: 0 8px; border: 0; background: transparent; color: var(--d14,#0f766e); font-size: 12px; font-weight: 700">{{ fRe.limpiarLbl }}</button></sc-if>
+          </div>
+      <sc-if value="{{ reuLista }}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; flex-direction: column; gap: 12px">
+
+          <sc-if value="{{ sinReuniones }}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 40px 20px; text-align: center; color: var(--d5,#5b6577); background: var(--d7,#ffffff); border: 1px dashed var(--d6,#d5dbe5); border-radius: 14px">No hay reuniones que coincidan con esa búsqueda.</div>
+          </sc-if>
+          <sc-if value="{{ reuTabla }}" hint-placeholder-val="{{ false }}">
+            <div style="grid-column: 1 / -1; background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; overflow: auto">
+              <div style="min-width: 760px">
+                <div style="display: grid; grid-template-columns: 1.8fr 1.2fr 0.9fr 0.7fr 1fr 0.9fr; gap: 10px; padding: 12px 18px; background: var(--d25,#f8fafc); font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)"><span>Reunión</span><span>Cliente</span><span>Fecha</span><span>Duración</span><span>Ánimo</span><span>Compromisos</span></div>
+                <sc-for list="{{ reuniones }}" as="r" hint-placeholder-count="5">
+                  <button onClick="{{ r.open }}" style="width: 100%; display: grid; grid-template-columns: 1.8fr 1.2fr 0.9fr 0.7fr 1fr 0.9fr; gap: 10px; padding: 12px 18px; border: 0; border-top: 1px solid var(--d20,#eef1f5); background: var(--d7,#ffffff); text-align: left; align-items: center; font-size: 13px; color: var(--d1,#101827)">
+                    <span><b>{{ r.titulo }}</b><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">{{ r.tipo }}</span></span>
+                    <span>{{ r.cliente }}</span>
+                    <span>{{ r.fecha }}</span>
+                    <span>{{ r.dur }}</span>
+                    <span><span style="font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 12px; background: {{ r.sentBg }}; color: {{ r.sentFg }}">{{ r.sentTxt }}</span></span>
+                    <span style="font-weight: 700">{{ r.nTareas }}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ reuTarjetas }}" hint-placeholder-val="{{ true }}"><sc-for list="{{ reuniones }}" as="m" hint-placeholder-count="3">
+            <button onClick="{{ m.open }}" style="width: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; text-align: left; padding: 18px 20px; background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; color: var(--d1,#101827)">
+              <span style="width: 44px; height: 44px; border-radius: 12px; background: var(--d13,#e6f4f2); display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--d14,#0f766e)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a3 3 0 00-3 3v6a3 3 0 006 0V6a3 3 0 00-3-3zM6 11a6 6 0 0012 0M12 17v4"></path></svg>
+              </span>
+              <span style="flex: 1 1 280px">
+                <span style="display: block; font-weight: 800; font-size: 15px">{{ m.titulo }}</span>
+                <span style="display: block; font-size: 13px; color: var(--d5,#5b6577)">{{ m.cliente }} · con {{ m.part }}</span>
+                <span style="display: block; font-size: 12px; color: var(--d9,#8a94a6)">{{ m.fecha }} · {{ m.dur }} · {{ m.tipo }}</span>
+                <span style="display: block; margin-top: 6px; font-size: 13px; color: var(--d31,#374151)">{{ m.corto }}</span>
+              </span>
+              <span style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px">
+                <span style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: {{ m.sentBg }}; color: {{ m.sentFg }}">{{ m.sentTxt }}</span>
+                <span style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">{{ m.nTareas }} compromisos</span>
+              </span>
+            </button>
+          </sc-for></sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ reuInsights }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 18px">
+          <div style="background: var(--d32,#f4fbfa); border: 1px solid var(--d33,#cde7e3); border-radius: 14px; padding: 16px 20px; font-size: 14px; color: var(--d15,#0b3f3b)">{{ gen.titular }}</div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+            <div style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 16px 20px">
+              <div style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">Reuniones analizadas</div>
+              <div style="margin-top: 4px; font-size: 24px; font-weight: 800">{{ gen.n }}</div>
+            </div>
+            <div style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 16px 20px">
+              <div style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">Clima general</div>
+              <div style="margin-top: 4px; font-size: 20px; font-weight: 800">{{ gen.clima }}</div>
+            </div>
+            <div style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 16px 20px">
+              <div style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">Objeción más frecuente</div>
+              <div style="margin-top: 4px; font-size: 20px; font-weight: 800">{{ gen.objTop }}</div>
+            </div>
+            <div style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 16px 20px">
+              <div style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">Cuánto hablás vos</div>
+              <div style="margin-top: 4px; font-size: 24px; font-weight: 800">{{ gen.vos }}</div>
+              <div style="font-size: 12px; color: var(--d5,#5b6577)">{{ gen.vosTip }}</div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px">
+            <div style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 18px 20px">
+              <div style="font-weight: 800; margin-bottom: 10px">Temas que se repiten</div>
+              <sc-for list="{{ gen.temas }}" as="b" hint-placeholder-count="4">
+                <div style="display: flex; align-items: center; gap: 10px; padding: 4px 0; font-size: 13px">
+                  <span style="width: 110px; font-weight: 600">{{ b.k }}</span>
+                  <span style="flex-grow: 1; height: 8px; background: var(--d34,#eef1f5); border-radius: 4px"><span style="display: block; height: 8px; border-radius: 4px; background: #0F766E; width: {{ b.w }}"></span></span>
+                  <span style="width: 70px; text-align: right; color: var(--d5,#5b6577)">{{ b.n }} reun.</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 18px 20px">
+              <div style="font-weight: 800; margin-bottom: 10px">Objeciones y dudas frecuentes</div>
+              <sc-for list="{{ gen.obj }}" as="b" hint-placeholder-count="3">
+                <div style="display: flex; align-items: center; gap: 10px; padding: 4px 0; font-size: 13px">
+                  <span style="width: 160px; font-weight: 600">{{ b.k }}</span>
+                  <span style="flex-grow: 1; height: 8px; background: var(--d34,#eef1f5); border-radius: 4px"><span style="display: block; height: 8px; border-radius: 4px; background: #D97706; width: {{ b.w }}"></span></span>
+                  <span style="width: 70px; text-align: right; color: var(--d5,#5b6577)">{{ b.n }} reun.</span>
+                </div>
+              </sc-for>
+              <sc-if value="{{ gen.sinObj }}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; color: var(--d5,#5b6577)">Todavía no hay objeciones detectadas.</div></sc-if>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px">
+            <div style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 18px 20px">
+              <div style="font-weight: 800; margin-bottom: 4px">Lo que cuentan tus clientes</div>
