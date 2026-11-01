@@ -116,5 +116,5 @@ networks:
   # antes que Superset. Un producto derivado cambia este default por su propio
   # project_id (o define SUPABASE_DOCKER_NETWORK en infra/superset/.env).
   supabase:
-    name: ${SUPABASE_DOCKER_NETWORK:-supabase_network_automation-platform-template-supabase-dev}
+    name: ${SUPABASE_DOCKER_NETWORK:-supabase_network_a360-supabase-dev}
     external: true
