@@ -6,6 +6,7 @@ SaaS multiorganización para emprendedores de servicios profesionales: Personas 
 - `prototipo/Main.dc.html` + `prototipo/support.js` — prototipo navegable validado (referencia visual de la especificación).
 - `PANTALLAS.md` — mapa pantalla → ruta → bloque y líneas del código, citado desde ItsAPlan.
 - `ARQUITECTURA.md` — stack, multiorganización, modelo de datos, eventos, IA y seguridad.
+- Base de código: copia del template `automation-platform-template` (ver `ORIGEN.md`): `apps/`, `packages/`, `supabase/`, `workers/`, `infra/`, `specs/`. Instrucciones para agentes en `CLAUDE.md` y `AGENTS.md`.
 
 ## Regla de fuentes
 1. Comportamiento y datos: mandan los requisitos y escenarios de cada historia (ItsAPlan, proyecto A360).

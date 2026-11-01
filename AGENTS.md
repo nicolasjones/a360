@@ -4,6 +4,26 @@ Este repositorio usa GitHub Spec Kit. Antes de implementar una funcionalidad,
 revisa `.specify/memory/constitution.md` y los artefactos de la funcionalidad en
 `specs/`. No inventes requisitos de negocio: conviértelos primero en una spec.
 
+## Producto: A360 (Gestión Negocio 360)
+
+SaaS multiorganización y nativo de IA para emprendedores de servicios profesionales: Personas (Mi red → Prospecto → Cliente), Diagnósticos, Propuestas, Reuniones, Mensajes (WhatsApp y mail), Trabajo, Finanzas y Mi asistente. Este repo nace del template `automation-platform-template` (ver `ORIGEN.md`).
+
+Fuentes de verdad, en este orden:
+
+1. Comportamiento y datos: las historias y épicas de ItsAPlan, proyecto `A360` (cada una cita su pantalla del prototipo). No inventes requisitos: conviértelos primero en spec.
+2. Cómo se construye: `ARQUITECTURA.md` (stack v1, multiorganización con `org_id` y RLS en toda tabla, eventos con pgmq y pg_cron, IA gobernada, seguridad).
+3. Qué se ve: `prototipo/Main.dc.html` y el mapa `PANTALLAS.md` (pantalla → bloque de código y líneas). Es referencia visual; no hace falta que quede idéntico.
+
+Reglas propias de A360 sobre el template:
+
+- Stack v1: TypeScript y SQL. Supabase (Postgres con RLS, Auth, Storage, Edge Functions), React con Refine, Nango solo para OAuth de Google y Microsoft, WhatsApp Cloud API directo. Superset solo desde la v2.
+- Kestra queda en `infra/kestra/` pero apagado en la v1: pg_cron y pgmq cubren las tareas programadas y las colas. Se activa solo si aparecen flujos largos de varios pasos; hasta entonces no crees flows nuevos.
+- Reglas primero, IA solo a pedido, con costo visible y tope por organización. Nada sale a un cliente sin aprobación humana: todo mensaje saliente nace en `pendiente_aprobacion`.
+- Sin consentimiento de WhatsApp no hay plantillas ni mensajes automáticos. Teléfonos siempre en E.164.
+- Un único motor de reglas JSON para automatizaciones, macros y mensajes automáticos.
+- Código de terceros solo con licencia MIT, con aviso y guardia de licencias en CI. No uses Chatwoot ni Twenty como base ni como servicio (licencias): solo se portan las piezas MIT listadas en la auditoría.
+- Puertos de desarrollo de esta máquina: serie 44xx/94xx (web 4400, Supabase API 9400, base 7734), para correr en paralelo con el template y con MSF.
+
 ## Comandos de validación
 
 - `pnpm lint`
