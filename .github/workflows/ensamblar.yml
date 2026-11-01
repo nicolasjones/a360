@@ -1,0 +1,45 @@
+name: Ensamblar prototipo
+on:
+  push:
+    paths: ['.build/**']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: ensamblar
+  cancel-in-progress: true
+jobs:
+  ensamblar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ensamblar y verificar
+        id: asm
+        run: python3 .build/ensamblar.py
+      - name: Publicar reporte de diferencias
+        if: steps.asm.outputs.listo == 'error'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .build/reporte.txt
+          git commit -m "Reporte de partes del prototipo" && git push
+      - if: steps.asm.outputs.listo == 'si'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Capturas de pantalla
+        if: steps.asm.outputs.listo == 'si'
+        run: |
+          npm i --no-save playwright@1.47.2
+          npx playwright install --with-deps chromium
+          node .build/capturas.mjs
+      - name: Commit
+        if: steps.asm.outputs.listo == 'si'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -r -q --cached .build/parts
+          rm -rf .build/parts .build/reporte.txt node_modules
+          git add -A prototipo .build
+          git commit -m "Prototipo ensamblado y capturas de pantallas" || echo "Sin cambios"
+          git push
