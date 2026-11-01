@@ -1,7 +1,0 @@
-      upTipoAyuda: (() => { const t = (s.reuTipos || REU_TIPOS0).find((x) => x.name === uf.tipo); const k = t ? KIND_ST[t.kind] : null; return k ? 'Tipo «' + k[0] + '»: la IA busca ' + k[1].replace(/\.$/, '').toLowerCase() + '.' : ''; })(),
-      upQ: uf.q || '', setUpQ: (e) => self.setUpF({ q: e.target.value }),
-      upRelF: [['todas', 'Todos'], ['cliente', 'Clientes'], ['prospecto', 'Prospectos'], ['red', 'Mi red']].map((x) => ({ label: x[1], active: (uf.rf || 'todas') === x[0], inactive: (uf.rf || 'todas') !== x[0], pick: () => self.setUpF({ rf: x[0] }) })),
-      upRes: upResAll.slice(0, 6).map((c) => ({ nombre: c.nombre, sub: (c.tipo === 'Persona' ? 'Persona' : 'Empresa') + (c.rubro ? ' · ' + c.rubro : '') + ' · ' + (upUlt(c) < 90 ? 'último contacto hace ' + upUlt(c) + ' días' : 'sin contacto reciente'), badge: REL_ST[relDe(c)][0], bg: REL_ST[relDe(c)][1], fg: REL_ST[relDe(c)][2], pick: () => self.setUpF({ empresa: c.nombre, quienes: [], q: '' }) })),
-      upSinRes: upResAll.length === 0, upMasHint: upResAll.length > 6 ? 'Hay ' + (upResAll.length - 6) + ' más: escribí para filtrar.' : '',
-      upBuscar: !uf.empresa, upSel: !!uf.empresa && uf.empresa !== '__otra',
-      upSelNombre: cliUp ? cliUp.nombre : '', upSelSub: cliUp ? (cliUp.tipo === 'Persona' ? 'Persona' : 'Empresa') + (cliUp.rubro ? ' · ' + cliUp.rubro : '') : '', upSelBadge: cliUp ? REL_ST[relDe(cliUp)][0] : '', upSelBg: cliUp ? REL_ST[relDe(cliUp)][1] : 'var(--
