@@ -1,0 +1,190 @@
+            <button onClick="{{ sendComentario }}" style="height: 44px; padding: 0 18px; border: 0; border-radius: 10px; background: #0F766E; color: #fff; font-size: 14px; font-weight: 700">Enviar</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noComment }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top: 8px; font-size: 13px; color: var(--d5,#5b6577)">Tu rol es de solo lectura: podés ver el avance pero no enviar comentarios.</div>
+        </sc-if>
+      </section>
+    </div>
+  </sc-if>
+
+  <!-- ========== CONFIGURACIÓN ========== -->
+  <sc-if value="{{ isConfig }}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; flex-direction: column; gap: 18px; max-width: 1100px">
+      <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+      <nav aria-label="Secciones de configuración" style="flex: 1 1 220px; max-width: 260px; background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 10px; display: flex; flex-direction: column; gap: 2px">
+        <sc-if value="{{ cfgEnInicio }}" hint-placeholder-val="{{ false }}"><button onClick="{{ cfgIrInicio }}" style="height: 38px; padding: 0 12px; border: 0; border-radius: 10px; background: var(--d13,#e6f4f2); text-align: left; font-size: 14px; font-weight: 800; color: var(--d16,#0b5f58)">Resumen</button></sc-if>
+        <sc-if value="{{ cfgFueraInicio }}" hint-placeholder-val="{{ true }}"><button onClick="{{ cfgIrInicio }}" style="height: 38px; padding: 0 12px; border: 0; border-radius: 10px; background: transparent; text-align: left; font-size: 14px; font-weight: 700; color: var(--d1,#101827)">Resumen</button></sc-if>
+        <sc-for list="{{ cfgGrupos }}" as="g" hint-placeholder-count="4">
+          <div style="display: flex; flex-direction: column; gap: 2px; margin-top: 8px">
+            <div style="padding: 6px 12px 2px; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--d5,#5b6577)">{{ g.titulo }}</div>
+            <sc-for list="{{ g.items }}" as="t" hint-placeholder-count="3">
+              <div>
+                <sc-if value="{{ t.active }}" hint-placeholder-val="{{ false }}"><button onClick="{{ t.pick }}" style="width: 100%; min-height: 36px; padding: 0 12px; border: 0; border-radius: 10px; background: var(--d13,#e6f4f2); text-align: left; font-size: 14px; font-weight: 800; color: var(--d16,#0b5f58)">{{ t.label }}</button></sc-if>
+                <sc-if value="{{ t.inactive }}" hint-placeholder-val="{{ true }}"><button onClick="{{ t.pick }}" style="width: 100%; min-height: 36px; padding: 0 12px; border: 0; border-radius: 10px; background: transparent; text-align: left; font-size: 14px; font-weight: 600; color: var(--d1,#101827)">{{ t.label }}</button></sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </nav>
+      <div style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+        <sc-if value="{{ cfgFueraInicio }}" hint-placeholder-val="{{ true }}">
+          <div><div style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577); text-transform: uppercase; letter-spacing: 0.04em">{{ cfgActual.grupo }}</div><div style="margin-top: 2px; font-size: 14px; color: var(--d31,#374151)">{{ cfgActual.desc }}</div></div>
+        </sc-if>
+        <sc-if value="{{ cfgEnInicio }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 16px">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 12px 16px"><span style="font-size: 13px; font-weight: 700">Ver como</span><sc-for list="{{ pl.roles }}" as="r" hint-placeholder-count="4"><div><sc-if value="{{ r.active }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.pick }}" style="height: 34px; padding: 0 14px; border: 1px solid #0F766E; border-radius: 17px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">{{ r.label }}</button></sc-if><sc-if value="{{ r.inactive }}" hint-placeholder-val="{{ true }}"><button onClick="{{ r.pick }}" style="height: 34px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 17px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 13px; font-weight: 700">{{ r.label }}</button></sc-if></div></sc-for><span style="flex: 1 1 220px; font-size: 12px; color: var(--d5,#5b6577)">{{ pl.rolTxt }}</span></div>
+<div style="font-size: 14px; color: var(--d31,#374151)">Todo lo que se puede ajustar, ordenado por tema. Tocá cualquier fila para ir a esa sección.</div>
+            <sc-for list="{{ cfgGrupos }}" as="g" hint-placeholder-count="4">
+              <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 18px 20px">
+                <h2 style="margin: 0; font-size: 16px; font-weight: 800">{{ g.titulo }}</h2>
+                <div style="margin: 2px 0 8px; font-size: 13px; color: var(--d5,#5b6577)">{{ g.sub }}</div>
+                <sc-for list="{{ g.items }}" as="t" hint-placeholder-count="3">
+                  <button onClick="{{ t.pick }}" style="width: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 0; border: 0; border-top: 1px solid var(--d20,#eef1f5); background: var(--d7,#ffffff); text-align: left; color: var(--d1,#101827)">
+                    <span style="flex: 1 1 260px"><span style="display: block; font-weight: 700">{{ t.label }}</span><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">{{ t.desc }}</span></span>
+                    <span style="font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: {{ t.bg }}; color: {{ t.fg }}">{{ t.estado }}</span>
+                    <span aria-hidden="true" style="font-size: 18px; color: #94A3B8">›</span>
+                  </button>
+                </sc-for>
+              </section>
+            </sc-for>
+          </div>
+        </sc-if>
+
+  <!-- Tipos de reunión -->
+  <sc-if value="{{ cCaptacion }}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; flex-direction: column; gap: 16px; max-width: 760px">
+      <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; align-items: center; gap: 12px"><div style="flex: 1"><h2 style="margin: 0; font-size: 18px; font-weight: 800">Formulario y reservas</h2><div style="margin-top: 4px; font-size: 13px; color: var(--d5,#5b6577)">Una página pública donde te escriben y reservan una reunión en tus horarios libres. Cada contacto entra como prospecto.</div></div>
+          <sc-if value="{{ capOn }}" hint-placeholder-val="{{ true }}"><button onClick="{{ capTog }}" aria-label="Apagar" style="width: 48px; height: 28px; border: 0; border-radius: 14px; background: #0F766E; position: relative"><span style="position: absolute; top: 3px; left: 23px; width: 22px; height: 22px; border-radius: 11px; background: var(--d7,#ffffff)"></span></button></sc-if>
+          <sc-if value="{{ capOff }}" hint-placeholder-val="{{ false }}"><button onClick="{{ capTog }}" aria-label="Encender" style="width: 48px; height: 28px; border: 0; border-radius: 14px; background: var(--d45,#d5dbe5); position: relative"><span style="position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 11px; background: var(--d7,#ffffff)"></span></button></sc-if>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap"><span style="font-size: 13px; font-weight: 700; background: var(--d0,#f3f5f8); border-radius: 8px; padding: 8px 12px">{{ capLink }}</span><button onClick="{{ capCopiar }}" style="height: 32px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d1,#101827)">Copiar enlace</button></div>
+        <div><div style="font-size: 13px; font-weight: 700; margin-bottom: 6px">Los contactos entran al canal</div><div style="display: flex; flex-wrap: wrap; gap: 6px"><select onChange="{{ capCanalesSel.set }}" aria-label="capCanales" style="height: 36px; min-width: 220px; max-width: 100%; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 9px; background: var(--d7,#ffffff); font-size: 13px; color: var(--d1,#101827)"><sc-for list="{{ capCanalesSel.opts }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.label }}</option></sc-for></select></div></div>
+        <div><div style="font-size: 13px; font-weight: 700; margin-bottom: 6px">Campos extra (nombre y mail siempre)</div><div style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{ capCampos }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.pick }}" style="height: 30px; padding: 0 12px; border: 1px solid {{ c.bd }}; border-radius: 8px; background: {{ c.bg }}; color: {{ c.fg }}; font-size: 12px; font-weight: 700">{{ c.label }}</button></sc-for></div></div>
+        <div><div style="font-size: 13px; font-weight: 700; margin-bottom: 6px">Duración de la reunión</div><div style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{ capDurs }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.pick }}" style="height: 30px; padding: 0 12px; border: 1px solid {{ c.bd }}; border-radius: 8px; background: {{ c.bg }}; color: {{ c.fg }}; font-size: 12px; font-weight: 700">{{ c.label }}</button></sc-for></div></div>
+        <div style="font-size: 12px; color: var(--d5,#5b6577)">Incluye una casilla de consentimiento para recibir mensajes (WhatsApp solo con aceptación), protección contra spam y un límite de envíos por persona.</div>
+      </section>
+      <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+        <h2 style="margin: 0; font-size: 16px; font-weight: 800">Probalo como si fueras un visitante</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px"><input value="{{ capN }}" onChange="{{ setCapN }}" placeholder="Nombre" style="height: 36px; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; font-size: 13px; color: var(--d1,#101827); background: var(--d7,#ffffff); width: 190px"><input value="{{ capE }}" onChange="{{ setCapE }}" placeholder="Mail" style="height: 36px; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; font-size: 13px; color: var(--d1,#101827); background: var(--d7,#ffffff); width: 220px"><sc-if value="{{ capShowMsg }}" hint-placeholder-val="{{ true }}"><input value="{{ capM }}" onChange="{{ setCapM }}" placeholder="Mensaje" style="height: 36px; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; font-size: 13px; color: var(--d1,#101827); background: var(--d7,#ffffff); width: 260px"></sc-if></div>
+        <div><button onClick="{{ capProbar }}" style="height: 36px; padding: 0 14px; border: 0; border-radius: 8px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">Reservar mañana 10:00</button></div>
+        <sc-if value="{{ capHayRecib }}" hint-placeholder-val="{{ false }}"><div style="padding-top: 8px; border-top: 1px solid var(--d20,#eef1f5)"><div style="font-size: 12px; font-weight: 800; color: var(--d5,#5b6577); margin-bottom: 4px">RECIBIDOS</div><sc-for list="{{ capRecib }}" as="r" hint-placeholder-count="1"><div style="padding: 4px 0; font-size: 13px">{{ r.t }}</div></sc-for></div></sc-if>
+      </section>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ cReuTipos }}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+        <div><h2 style="margin: 0; font-size: 18px; font-weight: 800">Tipos de reunión</h2><div style="margin-top: 4px; font-size: 13px; color: var(--d5,#5b6577)">Cada tipo le dice al sistema qué buscar. En una reunión de ventas detecta dolores y señales de compra; en un 1:1 de networking detecta qué busca y qué ofrece la otra persona, y los referidos. Es análisis por reglas: no consume IA.</div></div>
+        <sc-for list="{{ rtList }}" as="t" hint-placeholder-count="5"><div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--d20,#eef1f5)">
+          <span style="flex: 1 1 200px"><span style="display: block; font-weight: 700">{{ t.name }}</span><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">{{ t.foco }}</span></span>
+          <span style="font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 6px; background: {{ t.bg }}; color: {{ t.fg }}">{{ t.kindTxt }}</span>
+          <span style="font-size: 12px; color: var(--d5,#5b6577)">{{ t.n }} reuniones</span>
+          <sc-if value="{{ t.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ t.del }}" aria-label="Quitar" style="width: 32px; height: 32px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); color: var(--d19,#b91c1c)">×</button></sc-if>
+        </div></sc-for>
+        <div style="border-top: 1px solid var(--d20,#eef1f5); padding-top: 14px; display: flex; flex-direction: column; gap: 10px">
+          <div style="font-size: 13px; font-weight: 700">Agregar un tipo</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
+            <input value="{{ rtNom }}" onChange="{{ setRtNom }}" placeholder="Ej.: 1:1 con mentor" aria-label="Nombre del tipo" style="height: 44px; width: 260px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px">
+            <sc-for list="{{ rtKinds }}" as="k" hint-placeholder-count="3"><div>
+              <sc-if value="{{ k.active }}" hint-placeholder-val="{{ false }}"><button onClick="{{ k.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid #101827; border-radius: 18px; background: var(--d2,#101827); color: #fff; font-size: 13px; font-weight: 700">{{ k.label }}</button></sc-if>
+              <sc-if value="{{ k.inactive }}" hint-placeholder-val="{{ true }}"><button onClick="{{ k.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 18px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 13px; font-weight: 600">{{ k.label }}</button></sc-if>
+            </div></sc-for>
+            <button onClick="{{ addRt }}" style="height: 44px; padding: 0 18px; border: 0; border-radius: 10px; background: #0F766E; color: #fff; font-size: 14px; font-weight: 700">Agregar</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </sc-if>
+
+  <!-- Canales y flujos -->
+  <sc-if value="{{ cCanales }}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; flex-direction: column; gap: 18px">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+        <div style="flex: 1 1 320px; font-size: 14px; color: var(--d5,#5b6577)">Cada prospecto llega por un canal. Las etapas de cada proceso de venta se definen en Prospectos. Acá creás los canales y ves cuál rinde de verdad.</div>
+        <div style="display: flex; background: var(--d24,#e9edf3); border-radius: 10px; padding: 3px">
+              <sc-for list="{{ canFormas }}" as="v" hint-placeholder-count="2">
+                <div>
+                  <sc-if value="{{ v.active }}" hint-placeholder-val="{{ true }}"><button onClick="{{ v.pick }}" style="height: 32px; padding: 0 14px; border: 0; border-radius: 8px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 12px; font-weight: 800">{{ v.label }}</button></sc-if>
+                  <sc-if value="{{ v.inactive }}" hint-placeholder-val="{{ false }}"><button onClick="{{ v.pick }}" style="height: 32px; padding: 0 14px; border: 0; border-radius: 8px; background: transparent; color: var(--d5,#5b6577); font-size: 12px; font-weight: 700">{{ v.label }}</button></sc-if>
+                </div>
+              </sc-for>
+            </div>
+            <button onClick="{{ openChannelNew }}" style="height: 40px; padding: 0 16px; border: 0; border-radius: 10px; background: #0F766E; color: #fff; font-size: 14px; font-weight: 700">Nuevo canal</button>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; align-items: start">
+        <sc-if value="{{ canTabla }}" hint-placeholder-val="{{ false }}">
+            <div style="grid-column: 1 / -1; background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; overflow: auto">
+              <div style="min-width: 760px">
+                <div style="display: grid; grid-template-columns: 1.6fr 1fr 0.7fr 0.8fr 0.7fr 1.1fr 0.8fr; gap: 10px; padding: 12px 18px; background: var(--d25,#f8fafc); font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)"><span>Canal</span><span>Tipo</span><span>Prospectos</span><span>Reuniones</span><span>Ventas</span><span>Ingresos</span><span>Retorno</span></div>
+                <sc-for list="{{ canales }}" as="r" hint-placeholder-count="5">
+                  <button onClick="{{ r.configure }}" style="width: 100%; display: grid; grid-template-columns: 1.6fr 1fr 0.7fr 0.8fr 0.7fr 1.1fr 0.8fr; gap: 10px; padding: 12px 18px; border: 0; border-top: 1px solid var(--d20,#eef1f5); background: var(--d7,#ffffff); text-align: left; align-items: center; font-size: 13px; color: var(--d1,#101827)">
+                    <span><b>{{ r.name }}</b><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">Proceso: {{ r.flujo }}</span></span>
+                    <span><span style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: {{ r.bg }}; color: {{ r.color }}">{{ r.tipo }}</span></span>
+                    <span>{{ r.leads }}</span>
+                    <span>{{ r.reuniones }}</span>
+                    <span>{{ r.ventas }}</span>
+                    <span style="font-weight: 700">{{ r.ingreso }}</span>
+                    <span style="font-weight: 800">{{ r.roi }}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ canTarjetas }}" hint-placeholder-val="{{ true }}"><sc-for list="{{ canales }}" as="c" hint-placeholder-count="5">
+          <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+            <div style="display: flex; align-items: flex-start; gap: 10px">
+              <div style="flex-grow: 1">
+                <div style="font-weight: 800; font-size: 16px">{{ c.name }}</div>
+                <span style="display: inline-block; margin-top: 4px; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: {{ c.bg }}; color: {{ c.color }}">{{ c.tipo }}</span>
+              </div>
+              <div style="text-align: right">
+                <div style="font-size: 11px; font-weight: 700; color: var(--d5,#5b6577)">Retorno</div>
+                <div style="font-size: 22px; font-weight: 800; letter-spacing: -0.02em">{{ c.roi }}</div>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center">
+              <div style="background: var(--d0,#f3f5f8); border-radius: 10px; padding: 10px 4px"><div style="font-size: 18px; font-weight: 800">{{ c.leads }}</div><div style="font-size: 11px; color: var(--d5,#5b6577)">Leads</div></div>
+              <div style="background: var(--d0,#f3f5f8); border-radius: 10px; padding: 10px 4px"><div style="font-size: 18px; font-weight: 800">{{ c.reuniones }}</div><div style="font-size: 11px; color: var(--d5,#5b6577)">Reuniones</div></div>
+              <div style="background: var(--d0,#f3f5f8); border-radius: 10px; padding: 10px 4px"><div style="font-size: 18px; font-weight: 800">{{ c.ventas }}</div><div style="font-size: 11px; color: var(--d5,#5b6577)">Ventas</div></div>
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)"><span>Ingresos generados</span><span>{{ c.ingreso }}</span></div>
+              <div style="margin-top: 6px; height: 8px; border-radius: 4px; background: var(--d17,#e4e8ee)"><div style="width: {{ c.barW }}%; height: 8px; border-radius: 4px; background: {{ c.color }}"></div></div>
+              <div style="margin-top: 6px; font-size: 12px; color: var(--d5,#5b6577)">Costo del canal: {{ c.costo }}</div>
+            </div>
+            <div style="font-size: 12px; color: var(--d5,#5b6577)">Proceso de venta: <b style="color: var(--d1,#101827)">{{ c.flujo }}</b></div>
+            <button onClick="{{ c.configure }}" style="height: 38px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">Configurar canal</button>
+          </section>
+        </sc-for></sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+      <!-- Perfil -->
+      <sc-if value="{{ cPerfil }}" hint-placeholder-val="{{ true }}">
+        <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+          <h2 style="margin: 0; font-size: 18px; font-weight: 800">Mi perfil</h2>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px">
+            <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700">Nombre
+              <input value="{{ profile.nombre }}" onChange="{{ setPerfilNombre }}" style="height: 44px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px; color: var(--d1,#101827)">
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700">Email
+              <input value="{{ profile.email }}" onChange="{{ setPerfilEmail }}" style="height: 44px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px; color: var(--d1,#101827)">
+            </label>
+          </div>
+          <div>
+            <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px">Idioma</div>
+            <div style="display: flex; gap: 8px">
+              <sc-for list="{{ idiomas }}" as="r" hint-placeholder-count="2">
+                <div>
+                  <sc-if value="{{ r.active }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid #0F766E; border-radius: 18px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">{{ r.label }}</button></sc-if>
+                  <sc-if value="{{ r.inactive }}" hint-placeholder-val="{{ true }}"><button onClick="{{ r.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 18px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 13px; font-weight: 600">{{ r.label }}</button></sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="font-size: 13px; color: var(--d5,#5b6577)">Zona horaria: Buenos Aires (UTC-3)</div>
