@@ -4,8 +4,7 @@ SaaS multiorganización para emprendedores de servicios profesionales: Personas 
 
 ## Contenido
 - `prototipo/Main.dc.html` + `prototipo/support.js` — prototipo navegable validado (referencia visual de la especificación).
-- `prototipo/pantallas/` — capturas de cada pantalla.
-- `PANTALLAS.md` — mapa código → ruta → captura, citado desde ItsAPlan.
+- `PANTALLAS.md` — mapa pantalla → ruta → bloque y líneas del código, citado desde ItsAPlan.
 - `ARQUITECTURA.md` — stack, multiorganización, modelo de datos, eventos, IA y seguridad.
 
 ## Regla de fuentes
