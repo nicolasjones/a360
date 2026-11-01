@@ -1,0 +1,182 @@
+          <div style="display: flex; justify-content: flex-end"><button onClick="{{ saveCfg }}" style="height: 44px; padding: 0 20px; border: 0; border-radius: 10px; background: #0F766E; color: #fff; font-size: 14px; font-weight: 700">Guardar cambios</button></div>
+        </section>
+      </sc-if>
+
+      <!-- Negocio -->
+      <sc-if value="{{ cNegocio }}" hint-placeholder-val="{{ false }}">
+        <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+          <h2 style="margin: 0; font-size: 18px; font-weight: 800">Mi negocio</h2>
+          <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700">Nombre del negocio
+            <input value="{{ biz.nombre }}" onChange="{{ setBizNombre }}" style="height: 44px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px; color: var(--d1,#101827)">
+          </label>
+          <div>
+            <div style="font-size: 13px; font-weight: 700">Qué usás en tu negocio</div>
+            <div style="font-size: 13px; color: var(--d5,#5b6577); margin-bottom: 4px">Activá solo lo que te sirve. Lo que apagues se oculta en todas las pantallas.</div>
+            <sc-for list="{{ modToggles }}" as="v" hint-placeholder-count="4">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--d20,#eef1f5)">
+                <span style="flex-grow: 1"><span style="display: block; font-weight: 600">{{ v.label }}</span><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">{{ v.sub }}</span></span>
+                <sc-if value="{{ v.on }}" hint-placeholder-val="{{ false }}"><button onClick="{{ v.toggle }}" aria-label="Desactivar" style="width: 48px; height: 28px; border: 0; border-radius: 14px; background: #0F766E; position: relative"><span style="position: absolute; top: 3px; left: 23px; width: 22px; height: 22px; border-radius: 11px; background: var(--d7,#ffffff)"></span></button></sc-if>
+                <sc-if value="{{ v.off }}" hint-placeholder-val="{{ true }}"><button onClick="{{ v.toggle }}" aria-label="Activar" style="width: 48px; height: 28px; border: 0; border-radius: 14px; background: var(--d38,#b8c0ce); position: relative"><span style="position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 11px; background: var(--d7,#ffffff)"></span></button></sc-if>
+              </div>
+            </sc-for>
+          </div>
+          <div>
+            <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px">Moneda principal</div>
+            <div style="display: flex; gap: 8px">
+              <sc-for list="{{ cfgMonedas }}" as="r" hint-placeholder-count="2">
+                <div>
+                  <sc-if value="{{ r.active }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid #0F766E; border-radius: 18px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">{{ r.label }}</button></sc-if>
+                  <sc-if value="{{ r.inactive }}" hint-placeholder-val="{{ true }}"><button onClick="{{ r.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 18px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 13px; font-weight: 600">{{ r.label }}</button></sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px">Día de facturación de los servicios recurrentes</div>
+            <div style="display: flex; gap: 8px">
+              <sc-for list="{{ cfgDias }}" as="r" hint-placeholder-count="4">
+                <div>
+                  <sc-if value="{{ r.active }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid #0F766E; border-radius: 18px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">{{ r.label }}</button></sc-if>
+                  <sc-if value="{{ r.inactive }}" hint-placeholder-val="{{ true }}"><button onClick="{{ r.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 18px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 13px; font-weight: 600">{{ r.label }}</button></sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px">Color de tu marca en el portal de clientes</div>
+            <div style="display: flex; gap: 10px">
+              <sc-for list="{{ cfgColores }}" as="c" hint-placeholder-count="4">
+                <button onClick="{{ c.pick }}" aria-label="{{ c.name }}" style="width: 40px; height: 40px; border-radius: 20px; background: {{ c.color }}; border: {{ c.border }}"></button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: flex-end"><button onClick="{{ saveCfg }}" style="height: 44px; padding: 0 20px; border: 0; border-radius: 10px; background: #0F766E; color: #fff; font-size: 14px; font-weight: 700">Guardar cambios</button></div>
+        </section>
+      </sc-if>
+
+      <!-- Integraciones -->
+      <sc-if value="{{ cInteg }}" hint-placeholder-val="{{ false }}">
+        <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 24px">
+          <h2 style="margin: 0 0 4px; font-size: 18px; font-weight: 800">Integraciones</h2>
+          <div style="font-size: 13px; color: var(--d5,#5b6577); margin-bottom: 4px">Conectá las herramientas que ya usás. Cada una se puede cambiar sin perder tu historial.</div>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 14px 0; border-top: 1px solid var(--d20,#eef1f5)">
+            <span style="flex: 1 1 260px"><span style="display: block; font-weight: 700">Gestores de tareas</span><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">Jira, Linear u otro. Alimenta el avance de proyectos y el portal de clientes.</span></span>
+            <button onClick="{{ openInteg }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">Administrar</button>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 14px 0; border-top: 1px solid var(--d20,#eef1f5)">
+            <span style="flex: 1 1 260px"><span style="display: block; font-weight: 700">Social Hub (Instagram y LinkedIn)</span><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">Tu app de redes sociales: envía prospectos a tu proceso de venta y recibe el contexto del negocio. Próximamente.</span></span>
+            <button onClick="{{ goSocial }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">Preparar conexión</button>
+          </div>
+          <sc-for list="{{ integs }}" as="g" hint-placeholder-count="6">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 14px 0; border-top: 1px solid var(--d20,#eef1f5)">
+              <span style="flex: 1 1 260px"><span style="display: block; font-weight: 700">{{ g.name }}</span><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">{{ g.desc }}</span></span>
+              <sc-if value="{{ g.on }}" hint-placeholder-val="{{ false }}"><button onClick="{{ g.toggle }}" style="height: 36px; padding: 0 14px; border: 0; border-radius: 10px; background: var(--d35,#d1fae5); font-size: 13px; font-weight: 700; color: var(--d18,#047857)">Conectado</button></sc-if>
+              <sc-if value="{{ g.off }}" hint-placeholder-val="{{ true }}"><button onClick="{{ g.toggle }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">Conectar</button></sc-if>
+            </div>
+          </sc-for>
+        </section>
+      </sc-if>
+
+      <!-- Automatizaciones -->
+      <sc-if value="{{ cAuto }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 24px">
+            <h2 style="margin: 0 0 4px; font-size: 18px; font-weight: 800">Automatizaciones</h2>
+            <div style="font-size: 13px; color: var(--d5,#5b6577); margin-bottom: 4px">Qué hace el sistema por vos. Las reglas propias de cada canal se editan en Canales.</div>
+            <sc-for list="{{ automs }}" as="n" hint-placeholder-count="5">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-top: 1px solid var(--d20,#eef1f5)">
+                <span style="flex-grow: 1"><span style="display: block; font-weight: 600">{{ n.label }}</span><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">{{ n.sub }}</span></span>
+                <sc-if value="{{ n.on }}" hint-placeholder-val="{{ false }}"><button onClick="{{ n.toggle }}" aria-label="Desactivar" style="width: 48px; height: 28px; border: 0; border-radius: 14px; background: #0F766E; position: relative"><span style="position: absolute; top: 3px; left: 23px; width: 22px; height: 22px; border-radius: 11px; background: var(--d7,#ffffff)"></span></button></sc-if>
+                <sc-if value="{{ n.off }}" hint-placeholder-val="{{ true }}"><button onClick="{{ n.toggle }}" aria-label="Activar" style="width: 48px; height: 28px; border: 0; border-radius: 14px; background: var(--d38,#b8c0ce); position: relative"><span style="position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 11px; background: var(--d7,#ffffff)"></span></button></sc-if>
+              </div>
+            </sc-for>
+          </section>
+          <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+            <h2 style="margin: 0; font-size: 18px; font-weight: 800">Mensajes con IA</h2>
+            <div style="display: flex; align-items: center; gap: 12px">
+              <span style="flex-grow: 1"><span style="display: block; font-weight: 600">Aprobar antes de enviar</span><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">Todo mensaje a un cliente queda como borrador hasta que lo revises. Recomendado.</span></span>
+              <sc-if value="{{ aprobar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ toggleAprobar }}" aria-label="Desactivar" style="width: 48px; height: 28px; border: 0; border-radius: 14px; background: #0F766E; position: relative"><span style="position: absolute; top: 3px; left: 23px; width: 22px; height: 22px; border-radius: 11px; background: var(--d7,#ffffff)"></span></button></sc-if>
+              <sc-if value="{{ noAprobar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ toggleAprobar }}" aria-label="Activar" style="width: 48px; height: 28px; border: 0; border-radius: 14px; background: var(--d38,#b8c0ce); position: relative"><span style="position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 11px; background: var(--d7,#ffffff)"></span></button></sc-if>
+            </div>
+            <div>
+              <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px">Tono por defecto de los recordatorios de cobro</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px">
+                <sc-for list="{{ tonosCfg }}" as="r" hint-placeholder-count="3">
+                  <div>
+                    <sc-if value="{{ r.active }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid #0F766E; border-radius: 18px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">{{ r.label }}</button></sc-if>
+                    <sc-if value="{{ r.inactive }}" hint-placeholder-val="{{ true }}"><button onClick="{{ r.pick }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 18px; background: var(--d7,#ffffff); color: var(--d1,#101827); font-size: 13px; font-weight: 600">{{ r.label }}</button></sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </section>
+        </div>
+      </sc-if>
+
+      <!-- Equipo -->
+      <sc-if value="{{ cEquipo }}" hint-placeholder-val="{{ false }}">
+        <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+            <h2 style="margin: 0; flex-grow: 1; font-size: 18px; font-weight: 800">Equipo</h2>
+          </div>
+          <sc-for list="{{ equipo }}" as="m" hint-placeholder-count="2">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--d20,#eef1f5)">
+              <span style="width: 40px; height: 40px; border-radius: 20px; background: var(--d13,#e6f4f2); color: var(--d16,#0b5f58); font-weight: 800; display: flex; align-items: center; justify-content: center">{{ m.ini }}</span>
+              <span style="flex: 1 1 200px"><span style="display: block; font-weight: 700">{{ m.nombre }}</span><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">{{ m.email }}</span></span>
+              <span style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: var(--d24,#e9edf3); color: var(--d1,#101827)">{{ m.rol }}</span>
+              <button onClick="{{ m.cambiar }}" style="height: 32px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d1,#101827)">Cambiar rol</button>
+              <button onClick="{{ m.quitar }}" style="height: 32px; padding: 0 12px; border: 1px solid var(--d46,#f3b4b4); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d19,#b91c1c)">Quitar</button>
+            </div>
+          </sc-for>
+          <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end">
+            <label style="flex: 1 1 240px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700">Invitar por email
+              <input value="{{ teamEmail }}" onChange="{{ setTeamEmail }}" placeholder="persona@email.com" style="height: 44px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px; color: var(--d1,#101827)">
+            </label>
+            <button onClick="{{ inviteTeam }}" style="height: 44px; padding: 0 18px; border: 0; border-radius: 10px; background: #0F766E; color: #fff; font-size: 14px; font-weight: 700">Enviar invitación</button>
+          </div>
+          <div style="background: var(--d0,#f3f5f8); border-radius: 12px; padding: 14px 16px; font-size: 13px; color: var(--d31,#374151)">
+            <b>Roles:</b> Administrador, Miembro, Solo lectura (ideal para tu contador) y Cliente (portal, solo ve lo suyo). Cada cambio queda en la auditoría.
+          </div>
+          <div style="border: 1px solid var(--d20,#eef1f5); border-radius: 12px; overflow: auto">
+            <div style="min-width: 520px">
+              <div style="display: grid; grid-template-columns: 2.4fr 1fr 1fr 1fr 1fr; gap: 8px; padding: 10px 14px; background: var(--d25,#f8fafc); font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)"><span>Permiso</span><span>Admin.</span><span>Miembro</span><span>Solo lectura</span><span>Cliente</span></div>
+              <sc-for list="{{ permisos }}" as="p" hint-placeholder-count="6">
+                <div style="display: grid; grid-template-columns: 2.4fr 1fr 1fr 1fr 1fr; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--d20,#eef1f5); font-size: 13px"><span>{{ p.label }}</span><sc-for list="{{ p.cells }}" as="c" hint-placeholder-count="4"><b style="color: {{ c.c }}">{{ c.t }}</b></sc-for></div>
+              </sc-for>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ cFuncs }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<div><h2 style="margin: 0; font-size: 18px; font-weight: 800">Módulos activos</h2><div style="margin-top: 4px; font-size: 13px; color: var(--d5,#5b6577)">Activá solo lo que usás. Lo apagado se oculta para todo el equipo y cada cambio queda registrado en la auditoría.</div></div>
+<sc-for list="{{ pl.funcs }}" as="f" hint-placeholder-count="6"><div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--d20,#eef1f5)"><span style="flex: 1 1 300px"><span style="display: block; font-weight: 700">{{ f.label }}</span><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">{{ f.desc }}</span></span><sc-if value="{{ f.on }}" hint-placeholder-val="{{ false }}"><button onClick="{{ f.toggle }}" aria-label="Desactivar" style="width: 48px; height: 28px; border: 0; border-radius: 14px; background: #0F766E; padding: 3px; display: flex; justify-content: flex-end"><span style="width: 22px; height: 22px; border-radius: 11px; background: var(--d7,#ffffff)"></span></button></sc-if><sc-if value="{{ f.off }}" hint-placeholder-val="{{ true }}"><button onClick="{{ f.toggle }}" aria-label="Activar" style="width: 48px; height: 28px; border: 0; border-radius: 14px; background: var(--d47,#cbd5e1); padding: 3px; display: flex; justify-content: flex-start"><span style="width: 22px; height: 22px; border-radius: 11px; background: var(--d7,#ffffff)"></span></button></sc-if></div></sc-for>
+<sc-for list="{{ pl.funcsNo }}" as="f" hint-placeholder-count="1"><div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--d20,#eef1f5)"><span style="flex: 1 1 300px"><span style="display: block; font-weight: 700; color: var(--d5,#5b6577)">{{ f.label }}</span><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">No incluido en tu plan</span></span><button onClick="{{ f.pedir }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">Pedirlo</button></div></sc-for>
+<div style="font-size: 13px; color: var(--d5,#5b6577)">Tracker, horas, portal del cliente y propuestas se activan en la sección Datos del negocio y marca.</div>
+          </section>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ cConex }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<div><h2 style="margin: 0; font-size: 18px; font-weight: 800">Conexiones</h2><div style="margin-top: 4px; font-size: 13px; color: var(--d5,#5b6577)">Conectá tus cuentas con un clic (autorización segura OAuth). Nunca guardamos tus claves en el navegador.</div></div>
+<sc-for list="{{ pl.conex }}" as="c" hint-placeholder-count="6"><div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--d20,#eef1f5)"><span style="flex: 1 1 260px"><span style="display: block; font-weight: 700">{{ c.name }}</span><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">{{ c.desc }}</span></span><span style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: {{ c.bg }}; color: {{ c.fg }}">{{ c.est }}</span><button onClick="{{ c.run }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">{{ c.accion }}</button></div></sc-for>
+          </section>
+          <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<div><h2 style="margin: 0; font-size: 18px; font-weight: 800">Identificadores externos de clientes</h2><div style="margin-top: 4px; font-size: 13px; color: var(--d5,#5b6577)">Vinculá cada cliente con su identificador en otros sistemas (CUIT, ARCA, etc.) para que los cobros y datos se crucen sin buscar por nombre.</div></div>
+<sc-for list="{{ pl.mapeo }}" as="m" hint-placeholder-count="4"><div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--d20,#eef1f5)"><span style="flex: 1 1 200px; font-weight: 700">{{ m.nombre }}</span><span style="flex: 2 1 300px; display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{ m.ids }}" as="i" hint-placeholder-count="2"><span style="font-size: 12px; padding: 4px 10px; border-radius: 6px; background: var(--d0,#f3f5f8); color: var(--d31,#374151)">{{ i.t }}</span></sc-for></span><button onClick="{{ m.add }}" style="height: 36px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">Agregar</button></div></sc-for>
+          </section>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ cIA }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<div><h2 style="margin: 0; font-size: 18px; font-weight: 800">Presupuesto y consumo de IA</h2><div style="margin-top: 4px; font-size: 13px; color: var(--d5,#5b6577)">Un tope mensual evita sorpresas. Te avisamos antes de llegar.</div></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end"><label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700">Tope mensual (USD)<input value="{{ pl.presup }}" onChange="{{ pl.setPresup }}" style="width: 140px; height: 44px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; font-size: 14px"></label><div style="font-size: 13px; color: var(--d31,#374151)">Usaste <b>{{ pl.gasto }}</b> este mes ({{ pl.gastoPct }} %)</div></div><div style="height: 8px; border-radius: 4px; background: var(--d17,#e4e8ee)"><div style="width: {{ pl.gastoW }}%; height: 8px; border-radius: 4px; background: #0F766E"></div></div>
+<sc-for list="{{ pl.costoCaps }}" as="r" hint-placeholder-count="5"><div style="display: flex; justify-content: space-between; gap: 12px; font-size: 13px"><span>{{ r.label }}</span><b>{{ r.txt }}</b></div></sc-for>
+          </section>
+          <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
