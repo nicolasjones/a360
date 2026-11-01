@@ -1,0 +1,153 @@
+    const CAPAS = [['clientes', 'Consultar clientes y oportunidades', 'Prospectos, canales y contactos'], ['reuniones', 'Buscar en reuniones y documentos', 'Siempre con cita de la fuente'], ['cobros', 'Consultar facturas y cobros', 'Estados, vencimientos y montos'], ['tareas', 'Crear tareas y recordatorios', 'En tu agenda y en tu gestor de tareas'], ['borradores', 'Redactar mensajes a clientes', 'Quedan como borrador hasta que los apruebes'], ['envio', 'Enviar mensajes sin pedir aprobación', 'No recomendado: puede equivocarse con un cliente']];
+    const capasView = CAPAS.map((n) => ({ label: n[1], sub: n[2], on: !!s.capas[n[0]], off: !s.capas[n[0]], toggle: () => self.setState({ capas: { ...s.capas, [n[0]]: !s.capas[n[0]] } }) }));
+    return __withSel({
+      nav: nav, crumb: T2[0], title: T2[1],
+      modTracker: !!s.mods.tracker, modHoras: !!s.mods.horas, cliPropuestas: s.cliVista === 'propuestas',
+      fPr: prF.vm, propKpis: propKpis, propFiltros: propFiltros, propuestas: propuestasView,
+      nuevaProp: () => self.setState({ modal: 'nuevaProp', newMenu: false, nuevaP: { dest: destinos[0].empresa, tpl: s.ptpls[0].id, instr: '' } }),
+      modToggles: MODS.map((m) => ({ label: m[1], sub: m[2], on: !!s.mods[m[0]], off: !s.mods[m[0]], toggle: () => self.setState({ mods: { ...s.mods, [m[0]]: !s.mods[m[0]] }, cliVista: s.cliVista === 'propuestas' && m[0] === 'propuestas' ? 'pipeline' : s.cliVista }) })),
+      isPropEd: s.screen === 'propuesta', ed: ed, pv: pv, pedTabs: pedTabs, pedAsistente: s.pedTab === 'asistente', pedEstructura: s.pedTab === 'estructura', pedDiseno: s.pedTab === 'diseno', pedDatos: s.pedTab === 'datos',
+      pChat: s.pchat.map((m) => ({ text: m.text, align: m.role === 'user' ? 'flex-end' : 'flex-start', bg: m.role === 'user' ? 'var(--d14,#0f766e)' : 'var(--d0,#f3f5f8)', fg: m.role === 'user' ? 'var(--d7,#ffffff)' : 'var(--d1,#101827)' })),
+      pPend: { has: !!s.ppend, items: s.ppend ? s.ppend.items : [] }, pCanUndo: !!s.pprev, pChatIn: s.pchatIn, setPChatIn: (e) => self.setState({ pchatIn: e.target.value }),
+      pSugeridas: PSUGERIDAS.map((g) => ({ label: g, pick: () => askP(g) })), sendPChat: () => askP(s.pchatIn),
+      aplicarPend: () => { if (!s.ppend) return; const nd = s.ppend.items.reduce(applyCh, doc); self.setState({ vers: withVer(doc, 'Antes de aplicar cambios del asistente'), pdoc: nd, pprev: doc, ppend: null, pdirty: true, pchat: s.pchat.concat([{ role: 'bot', text: 'Listo, apliqué los cambios. Revisá la vista previa y pedime más ajustes si querés.' }]) }); },
+      descartarPend: () => self.setState({ ppend: null, pchat: s.pchat.concat([{ role: 'bot', text: 'Descartado: no cambié nada.' }]) }),
+      deshacerProp: () => { if (s.pprev) self.setState({ pdoc: s.pprev, pprev: null, pdirty: true }); },
+      pSecs: pSecs, pSel: { has: !!selSec, titulo: selSec ? selSec.titulo : '', texto: selSec ? selSec.texto : '' },
+      addSec: () => { const id = 's' + doc.secciones.length + 'n'; self.setState({ pdoc: { ...doc, secciones: doc.secciones.slice(0, -1).concat([{ id: id, tipo: 'texto', titulo: 'Nueva sección', texto: '', on: true }], doc.secciones.slice(-1)) }, pselSec: id, pdirty: true }); },
+      setSecTitulo: (e) => { const v = e.target.value; setDoc((d) => ({ ...d, secciones: d.secciones.map((y) => y.id === selSec.id ? { ...y, titulo: v } : y) })); },
+      setSecTexto: (e) => { const v = e.target.value; setDoc((d) => ({ ...d, secciones: d.secciones.map((y) => y.id === selSec.id ? { ...y, texto: v } : y) })); },
+      delSec: () => { if (doc.secciones.length <= 1) return; self.setState({ pdoc: { ...doc, secciones: doc.secciones.filter((y) => y.id !== selSec.id) }, pselSec: null, pdirty: true }); },
+      pItems: doc.items.map((i, k) => ({ c: i.c, m: String(i.m),
+        setC: (e) => { const v = e.target.value; setDoc((d) => ({ ...d, items: d.items.map((y, j) => j === k ? { ...y, c: v } : y) })); },
+        setM: (e) => { const v = parseInt(String(e.target.value).replace(/\D/g, ''), 10) || 0; setDoc((d) => ({ ...d, items: d.items.map((y, j) => j === k ? { ...y, m: v } : y) })); },
+        del: () => setDoc((d) => ({ ...d, items: d.items.filter((y, j) => j !== k) })) })),
+      addItem: () => setDoc((d) => ({ ...d, items: d.items.concat([{ c: 'Nuevo ítem', m: 0 }]) })), pTotal: fmt(pTotalN),
+      pColores: COLORES_P.map((c) => ({ name: c[1], color: c[0], border: doc.diseno.color === c[0] ? '3px solid #101827' : '2px solid #E4E8EE', pick: () => setDoc((d) => ({ ...d, diseno: { ...d.diseno, color: c[0] } })) })),
+      pFuentes: FUENTES.map((f) => ({ label: f[1], font: f[2], active: doc.diseno.fuente === f[0], inactive: doc.diseno.fuente !== f[0], pick: () => setDoc((d) => ({ ...d, diseno: { ...d.diseno, fuente: f[0] } })) })),
+      pFormatos: FORMATOS_P.map((f) => ({ label: f[1], active: doc.diseno.formato === f[0], inactive: doc.diseno.formato !== f[0], pick: () => setDoc((d) => ({ ...d, diseno: { ...d.diseno, formato: f[0] } })) })),
+      subirLogo: () => { setDoc((d) => ({ ...d, diseno: { ...d.diseno, logo: true } })); self.say('Logo cargado (ejemplo): en el producto subís tu PNG o SVG'); },
+      toggleLogo: () => setDoc((d) => ({ ...d, diseno: { ...d.diseno, logo: !d.diseno.logo } })), logoBtn: doc.diseno.logo ? 'Ocultar logo' : 'Mostrar logo',
+      pContactoSel: (() => { const c0 = ctaAll().find((c) => c.nombre === doc.cliente); const L = (c0 ? c0.contactos.map((p) => [p[0] + (p[1] ? ' · ' + p[1] : ''), p[0]]) : []).concat(s.opps.filter((o) => o.empresa === doc.cliente).map((o) => [o.contacto, o.contacto])).filter((x, i, a2) => a2.findIndex((y) => y[1] === x[1]) === i); return optSel(L, s.pContOtro ? '' : doc.contacto, (v) => { self.setState({ pContOtro: false }); setDoc((d) => ({ ...d, contacto: v })); }, 'Elegí la persona…', '+ Otra persona', () => self.setState({ pContOtro: true })); })(), pContOtro: !!s.pContOtro,
+      pDest: pDest, setPContacto: (e) => { const v = e.target.value; setDoc((d) => ({ ...d, contacto: v })); }, setPVence: (e) => { const v = e.target.value; setDoc((d) => ({ ...d, vence: v })); },
+      traerReunion: () => askP('Usá los datos de la última reunión'),
+      pTokens: [['[cliente]', doc.cliente], ['[contacto]', doc.contacto], ['[monto]', fmt(pTotalN)], ['[vence]', doc.vence], ['[fecha]', FECHA_P], ['[negocio]', NEG]].map((x) => ({ k: x[0], v: x[1] })),
+      backProps: () => self.setState({ screen: 'clientes', cliVista: 'propuestas', pedTab: 'asistente' }),
+      setPTitulo: (e) => { const v = e.target.value; setDoc((d) => ({ ...d, titulo: v })); },
+      guardarProp: () => { self.setState({ pdocs: { ...s.pdocs, [doc.id]: doc }, vers: withVer(doc, yaEnviada ? 'Cambios sobre lo enviado' : 'Borrador guardado'), propuestas: s.propuestas.map((x) => x.id === doc.id ? { ...x, titulo: doc.titulo, cliente: doc.cliente, contacto: doc.contacto, monto: pTotalN, vence: doc.vence, meta: x.estado === 'borrador' ? 'Borrador guardado ahora' : (yaEnviada ? 'Versión ' + (vList.length + 1) + ' guardada · sin reenviar' : x.meta) } : x), pdirty: false }); self.say(yaEnviada ? 'Guardada como versión ' + (vList.length + 1) : 'Borrador guardado'); },
+      abrirPlantilla: () => self.setState({ modal: 'plantilla', ptplName: '' }), abrirEnviar: () => self.setState({ modal: 'enviarProp', pconfirm: false }),
+      nvTonos: Object.keys(TONOS_NV).map((k) => ({ label: TONOS_NV[k], bg: nvTono === k ? 'var(--d1,#101827)' : 'var(--d7,#ffffff)', fg: nvTono === k ? 'var(--d7,#ffffff)' : 'var(--d1,#101827)', bd: nvTono === k ? 'var(--d1,#101827)' : 'var(--d45,#d5dbe5)', pick: () => self.setState({ nuevaP: { ...np, tono: k } }) })),
+      nvEstilos: Object.keys(ESTILOS_NV).map((k) => ({ label: ESTILOS_NV[k].l, bg: nvEstilo === k ? 'var(--d1,#101827)' : 'var(--d7,#ffffff)', fg: nvEstilo === k ? 'var(--d7,#ffffff)' : 'var(--d1,#101827)', bd: nvEstilo === k ? 'var(--d1,#101827)' : 'var(--d45,#d5dbe5)', pick: () => self.setState({ nuevaP: { ...np, estilo: k } }) })),
+      nvHayVars: !!np.vars, nvVars: nvVarsList,
+      generarVars: () => self.setState({ nuevaP: { ...np, vars: true } }),
+      pSelComps: selSec ? compsFor(selSec) : [],
+      portadaOpts: [['normal', 'Normal'], ['completa', 'Página completa']].map((o) => { const cur = (doc.diseno.portada || 'normal') === o[0]; return { label: o[1], bg: cur ? '#101827' : '#fff', fg: cur ? '#fff' : '#101827', bd: cur ? '#101827' : '#D5DBE5', run: () => self.setState({ vers: withVer(doc, 'Antes de cambiar la portada'), pdoc: { ...doc, diseno: { ...doc.diseno, portada: o[0] } }, pdirty: true }) }; }),
+      toggleBib: () => self.setState({ bibOpen: !s.bibOpen }), bibOpen: !!s.bibOpen,
+      pBloques: [['problema', 'El problema'], ['solucion', 'La solución'], ['alcance', 'Qué vamos a hacer'], ['cronograma', 'Cronograma'], ['inversion', 'Inversión'], ['casos', 'Casos de éxito'], ['equipo', 'Equipo'], ['faq', 'Preguntas frecuentes'], ['garantia', 'Garantía'], ['condiciones', 'Condiciones']].map((b) => ({ label: b[1], add: () => {
+        const ex = doc.secciones.find((y) => y.id === b[0]);
+        if (ex && ex.on) { self.setState({ pselSec: ex.id }); self.say('«' + b[1] + '» ya está en la propuesta'); return; }
+        if (ex) { self.setState({ pdoc: { ...doc, secciones: doc.secciones.map((y) => y.id === b[0] ? { ...y, on: true } : y) }, pselSec: ex.id, pdirty: true }); self.say('Bloque «' + b[1] + '» activado'); return; }
+        const nb = { ...SECS[b[0]], on: true }; const last = doc.secciones[doc.secciones.length - 1];
+        const arr = last && last.tipo === 'aceptacion' ? doc.secciones.slice(0, -1).concat([nb], [last]) : doc.secciones.concat([nb]);
+        self.setState({ pdoc: { ...doc, secciones: arr }, pselSec: nb.id, pdirty: true }); self.say('Bloque «' + b[1] + '» agregado');
+      } })),
+      kitTxt: (FUENTES.find((f) => f[0] === kitS.fuente) || FUENTES[0])[1] + ' · ' + (FORMATOS_P.find((f) => f[0] === kitS.formato) || FORMATOS_P[0])[1] + ' · ' + ((COLORES_P.find((c) => c[0] === kitS.color) || [0, kitS.color])[1]),
+      aplicarKit: () => { self.setState({ vers: withVer(doc, 'Antes de aplicar el kit de marca'), pdoc: { ...doc, diseno: { ...doc.diseno, color: kitS.color, fuente: kitS.fuente, formato: kitS.formato, logo: kitS.logo } }, pdirty: true }); self.say('Kit de marca aplicado'); },
+      guardarKit: () => { self.setState({ kit: { color: doc.diseno.color, fuente: doc.diseno.fuente, formato: doc.diseno.formato, logo: !!doc.diseno.logo } }); self.say('Guardado como tu kit de marca'); },
+      mRef: s.modal === 'ref', abrirRef: () => self.setState({ modal: 'ref', ref: { archivo: '', det: null } }),
+      refArchivo: (e) => { const f = e.target.files && e.target.files[0]; if (!f) return; let h = 0; for (let i = 0; i < f.name.length; i++) h = (h * 31 + f.name.charCodeAt(i)) % 997; self.setState({ ref: { archivo: f.name, det: REFS[h % REFS.length] } }); },
+      refTiene: !!refSet.det, refArchivoNombre: refSet.archivo, refPaleta: refSet.det ? refSet.det.paleta.map((c) => ({ c: c })) : [], refNota: refSet.det ? refSet.det.nota : '',
+      refAplicar: () => { if (!refSet.det) { self.say('Elegí primero un archivo de referencia'); return; } const r = refSet.det; self.setState({ vers: withVer(doc, 'Antes de tomar el estilo de «' + refSet.archivo + '»'), pdoc: { ...doc, diseno: { ...doc.diseno, color: r.paleta[0], fuente: r.fuente, formato: r.formato } }, pdirty: true, modal: null }); self.say('Estilo de la referencia aplicado. Podés volver desde Versiones'); },
+      mVersiones: s.modal === 'versiones',
+      abrirVersiones: () => self.setState({ modal: 'versiones' }),
+      versVacia: vList.length === 0,
+      versLista: vList.slice().reverse().map((v) => ({ titulo: 'v' + v.n + ' · ' + v.label, meta: v.when + ' · ' + v.snap.secciones.filter((x) => x.on).length + ' secciones', volver: () => { self.setState({ vers: withVer(doc, 'Antes de volver a v' + v.n), pdoc: { ...doc, titulo: v.snap.titulo, diseno: { ...v.snap.diseno }, secciones: v.snap.secciones.map((x) => ({ ...x })), items: v.snap.items.map((i) => ({ ...i })) }, pdirty: true, modal: null }); self.say('Volviste a la v' + v.n + ' (la actual quedó guardada en Versiones)'); } })),
+      duplicarProp: () => {
+        const id = 'P-' + String(900 + s.propuestas.length);
+        const np2 = { ...(propRec || s.propuestas[0]), id: id, titulo: doc.titulo + ' (variante)', estado: 'borrador', meta: 'Variante de «' + doc.titulo + '»', monto: pTotalN };
+        const nd = { ...doc, id: id, titulo: np2.titulo, secciones: doc.secciones.map((x) => ({ ...x })), items: doc.items.map((i) => ({ ...i })) };
+        self.setState({ propuestas: [np2].concat(s.propuestas), pdocs: { ...s.pdocs, [doc.id]: doc, [id]: nd }, pdoc: nd, pprev: null, ppend: null, pdirty: false, pchat: [{ role: 'bot', text: 'Armé una variante de «' + doc.titulo + '». La original quedó como estaba; probá otro enfoque acá.' }] });
+        self.say('Variante creada: la original no cambia');
+      },
+      actualizarPlantilla: () => {
+        if (!tplRef) return;
+        const tk2 = (x) => ({ ...x, titulo: tokenize(x.titulo), texto: tokenize(x.texto) });
+        const prev = (s.vers || {})['tpl:' + tplRef.id] || [];
+        self.setState({ ptpls: s.ptpls.map((x) => x.id === tplRef.id ? { ...x, diseno: { ...doc.diseno }, secciones: doc.secciones.map(tk2) } : x), vers: { ...(s.vers || {}), ['tpl:' + tplRef.id]: prev.concat([{ n: prev.length + 1, label: 'Antes de actualizarla desde «' + doc.titulo + '»', when: 'hoy ' + new Date().toTimeString().slice(0, 5), snap: snapOf({ ...tplRef, titulo: tplRef.nombre, items: [] }) }]) } });
+        self.say('Plantilla «' + tplRef.nombre + '» actualizada (la versión anterior quedó guardada)');
+      },
+      guardarTplCambios: () => {
+        const tid = doc.esPlantilla; const tpl0 = s.ptpls.find((x) => x.id === tid); if (!tpl0) return;
+        const tk2 = (x) => ({ ...x, titulo: x.titulo, texto: x.texto });
+        self.setState({ vers: withVer({ ...tpl0, titulo: tpl0.nombre, items: [] }, 'Antes de guardar cambios'), ptpls: s.ptpls.map((x) => x.id === tid ? { ...x, nombre: doc.titulo, diseno: { ...doc.diseno }, secciones: doc.secciones.map(tk2) } : x), pdirty: false });
+        self.say('Plantilla guardada. Las propuestas ya creadas no cambian');
+      },
+      guardarTplNueva: () => {
+        const id = 'u' + (s.ptpls.length + 1);
+        const nt = { id: id, nombre: doc.titulo + ' (copia)', desc: 'Variante de «' + doc.titulo + '»', diseno: { ...doc.diseno }, secciones: doc.secciones.map((x) => ({ ...x })) };
+        self.setState({ ptpls: s.ptpls.concat([nt]), pdoc: { ...doc, esPlantilla: id, titulo: nt.nombre, plantilla: nt.nombre }, pdirty: false });
+        self.say('Guardada como plantilla nueva: la original no cambia');
+      },
+      probarOpts: destinos.map((d) => ({ v: d.empresa, l: d.empresa + ' · ' + d.contacto, sel: d.empresa === doc.cliente })),
+      probarCon: (e) => { const d = destinos.find((x) => x.empresa === e.target.value); if (d) self.setState({ pdoc: { ...doc, cliente: d.empresa, contacto: d.contacto } }); },
+      pReescribir: ['corta', 'cercana', 'tecnica'].map((k) => ({ label: k === 'corta' ? 'Más corta' : k === 'cercana' ? 'Más cercana' : 'Más técnica', run: () => { if (selSec) doRewrite(selSec.id, k); } })),
+      mImpTpl: s.modal === 'impTpl',
+      itpAyuda: 'Pegá el texto de tu propuesta o subí un archivo. Los títulos con # arman las secciones y los datos entre llaves dobles, como ' + '{' + '{cliente}' + '}' + ' o ' + '{' + '{contacto}' + '}' + ', se completan solos al usarla.',
+      itpPlaceholder: '# Lo que entendimos\n' + '{' + '{contacto}' + '}' + ' nos contó la situación de ' + '{' + '{cliente}' + '}' + '...\n# Inversión\n...',
+      abrirImpTpl: () => self.setState({ modal: 'impTpl', itp: { nombre: '', texto: '', archivo: '' } }),
+      itpNombre: itp.nombre, setItpNombre: (e) => self.setState({ itp: { ...itp, nombre: e.target.value } }),
+      itpTexto: itp.texto, setItpTexto: (e) => self.setState({ itp: { ...itp, texto: e.target.value } }),
+      itpTieneArchivo: !!itp.archivo, itpArchivoNombre: itp.archivo,
+      itpEjemplo: () => self.setState({ itp: { ...itp, nombre: itp.nombre || 'Consultoría de automatización', texto: ITP_EJ, archivo: '' } }),
+      itpArchivo: (e) => {
+        const f = e.target.files && e.target.files[0]; if (!f) return;
+        const base = { ...itp, nombre: itp.nombre || f.name.replace(/\.[^.]+$/, ''), archivo: f.name + ' · leyendo…' }; self.setState({ itp: base });
+        leerArchivoTexto(f).then((r) => {
+          if (r.ok) { self.setState({ itp: { ...base, texto: aSecciones(r.texto), archivo: f.name } }); self.say('Leí ' + f.name + ' con reglas, sin IA. Revisá las secciones detectadas'); }
+          else { self.setState({ itp: { ...base, archivo: f.name + ' · sin texto legible' } }); self.say('No pude leer texto de ' + f.name + ' (puede ser una imagen o tener codificación especial). En el producto, la IA lo lee a pedido con costo visible.'); }
+        }).catch(() => { self.setState({ itp: { ...base, archivo: f.name + ' · error al leer' } }); self.say('No pude abrir el archivo'); });
+      },
+      itpTieneSecs: itpP.secs.length > 0, itpResumen: itpP.secs.length + ' secciones · ' + itpP.campos.length + ' campos',
+      itpSecs: itpP.secs.map((x) => ({ titulo: x.titulo, meta: (x.tipo === 'inversion' ? 'tabla de inversión · ' : x.tipo === 'aceptacion' ? 'firma · ' : '') + x.texto.length + ' caracteres' })),
+      itpCampos: itpP.campos.map((k) => { const auto = ['cliente', 'contacto', 'vence', 'negocio'].indexOf(k) >= 0; return { label: '[' + k + '] ' + (auto ? 'se completa solo' : 'lo completás vos'), bg: auto ? 'var(--d35,#d1fae5)' : 'var(--d10,#fef3c7)', fg: auto ? 'var(--d18,#047857)' : 'var(--d12,#92400e)' }; }),
+      itpGuardar: () => {
+        if (!itpP.secs.length) { self.say('Pegá el texto o subí un archivo para armar la plantilla'); return; }
+        const nombre = itp.nombre.trim() || 'Plantilla importada';
+        const tpl = { id: 'i' + (s.ptpls.length + 1), nombre: nombre, desc: 'Importada · ' + itpP.secs.length + ' secciones', diseno: { color: '#0F766E', fuente: 'sans', formato: 'moderno', logo: true }, secciones: itpP.secs.map((x, i) => ({ id: 'imp' + i, tipo: x.tipo, titulo: x.titulo, texto: x.texto, on: true })) };
+        self.setState({ ptpls: s.ptpls.concat([tpl]), modal: null, itp: { nombre: '', texto: '', archivo: '' } });
+        self.say('Plantilla "' + nombre + '" importada: la ves en Mis plantillas');
+      },
+      mEnviarProp: s.modal === 'enviarProp', mPlantilla: s.modal === 'plantilla', mNuevaProp: s.modal === 'nuevaProp',
+      pConfirm: s.pconfirm, noPConfirm: !s.pconfirm, togglePConfirm: () => self.setState({ pconfirm: !s.pconfirm }),
+      confirmarEnvio: () => {
+        if (!s.pconfirm) { self.say('Marcá la confirmación para poder enviarla'); return; }
+        self.setState({ vers: withVer(doc, yaEnviada ? 'Reenviada al cliente' : 'Enviada al cliente'), pdocs: { ...s.pdocs, [doc.id]: doc }, propuestas: s.propuestas.map((x) => x.id === doc.id ? { ...x, titulo: doc.titulo, cliente: doc.cliente, contacto: doc.contacto, monto: pTotalN, estado: 'enviada', meta: 'Enviada ahora · sin abrir', vence: doc.vence } : x), pdirty: false, modal: null, screen: 'clientes', cliVista: 'propuestas', pconfirm: false });
+        self.say('Propuesta enviada a ' + doc.contacto + ' con link de seguimiento');
+      },
+      pTplName: s.ptplName, setPTplName: (e) => self.setState({ ptplName: e.target.value }),
+      confirmarPlantilla: () => {
+        const nombre = s.ptplName.trim() || 'Plantilla de ' + doc.cliente;
+        const tpl = { id: 'u' + (s.ptpls.length + 1), nombre: nombre, desc: 'Basada en "' + tokenize(doc.titulo) + '"', diseno: { ...doc.diseno }, secciones: doc.secciones.map((x) => ({ ...x, titulo: tokenize(x.titulo), texto: tokenize(x.texto) })) };
+        self.setState({ ptpls: s.ptpls.concat([tpl]), modal: null, ptplName: '' });
+        self.say('Plantilla "' + nombre + '" guardada: la ves en Mis plantillas');
+      },
+      nuevaDest: nuevaDest, nuevaTpls: nuevaTpls, nuevaInstr: np.instr, setNuevaInstr: (e) => self.setState({ nuevaP: { ...np, instr: e.target.value } }), pPlantillas: pPlantillas,
+      crearProp: () => {
+        const d0 = destinos.find((x) => x.empresa === np.dest) || destinos[0];
+        const tpl = s.ptpls.find((x) => x.id === np.tpl) || s.ptpls[0];
+        const opp = s.opps.find((o) => o.empresa === d0.empresa);
+        const p = { id: 'P-0' + (20 + s.propuestas.length), titulo: 'Propuesta para ' + d0.empresa, cliente: d0.empresa, contacto: d0.contacto, monto: opp ? opp.monto : 1500000, estado: 'borrador', meta: 'Borrador sin guardar' };
+        const d = mkDoc(p, tpl);
+        let chat = [{ role: 'bot', text: greet(d) }]; let pend = null;
+        const ins = np.instr.trim();
+        if (ins) { const r = interpret(ins, d); chat = chat.concat([{ role: 'user', text: ins }, { role: 'bot', text: r.ch.length ? 'Entendí ' + r.ch.length + (r.ch.length > 1 ? ' cambios' : ' cambio') + '. Revisalos y aplicalos si estás de acuerdo.' : (r.note || 'No pude convertir eso en un cambio concreto. Probá con una sugerencia.') }]); pend = r.ch.length ? { items: r.ch } : null; }
+        self.setState({ propuestas: [p].concat(s.propuestas), screen: 'propuesta', pdoc: d, pprev: null, ppend: pend, pdirty: true, pedTab: 'asistente', pselSec: null, pconfirm: false, pchat: chat, pchatIn: '', modal: null });
+      },
+      isTrDetalle: s.screen === 'proyecto', isCliente: s.screen === 'cliente',
+      trN: trBase.length, trNAbonos: nAb, trNProy: nPr, trNAtencion: nAt, trFiltros: trFiltros, trVistas: trVistas,
+      fTr: trF.vm, trVacio: trItems.length === 0, trTarjetas: s.trVista === 'tarjetas', trTabla: s.trVista === 'tabla' && trItems.length > 0, trLinea: s.trVista === 'linea' && trItems.length > 0, trItems: trItems, trSemanas: trSemanas,
+      nuevoTrabajo: () => self.setState({ modal: 'invoice', newMenu: false, inv: { ...s.inv, tipo: 'abono', concepto: '' } }),
+      det: det, detTabs: detTabs, detResumen: s.trTab === 'resumen', detTickets: s.trTab === 'tickets', detCobros: s.trTab === 'cobros', detActividad: s.trTab === 'actividad',
+      ...ctVals, ...capVals, ...altaVals, ...dgVals, ...cotVals, cli: cli, cliTabs: cliTabs, cliResumen: s.cliTab === 'resumen', cliTrabajo: s.cliTab === 'trabajo', cliFinanzas: s.cliTab === 'finanzas', cliReuniones: s.cliTab === 'reuniones', cliDocs: s.cliTab === 'docs', cliRed: s.cliTab === 'red', cliNetRows: netRows(csel.tipo === 'Persona' ? 'p:' + csel.nombre : 'e:' + csel.id), cliVerRed: () => self.setState({ screen: 'informes', infDash: 'red', redSel: csel.tipo === 'Persona' ? 'p:' + csel.nombre : 'e:' + csel.id, redCruzar: false }), cliHistorial: s.cliTab === 'historial', cliInsights: s.cliTab === 'insights', ci: ci, memList: memList, memSugN: memSug, hayMemSug: memSug > 0, histFiltros: histFiltros, histL: histL, cliNota: s.cliNota, setCliNota: (e) => self.setState({ cliNota: e.target.value }), addNota: addNota, cliDocsUp: cliDocsUp, sinDocsUp: cliDocsUp.length === 0, cliAuto: cliAuto, cliQuick: cliQuick,
+      abrirDocCli: () => self.setState({ modal: 'doc', df: { nombre: '', tipo: 'Documento', alcance: csel.nombre, texto: '', archivo: '' } }),
+      asHist: s.asTab === 'hist', bizL: bizL, bizTipos: bizTipos, bizNewTipo: bizNewTipo, bizKpis: bizKpis, bizNewT: s.bizNew.t, setBizNewT: (e) => self.setState({ bizNew: { ...s.bizNew, t: e.target.value } }), bizAdd: bizAdd,
