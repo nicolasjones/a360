@@ -1,0 +1,188 @@
+                      <button onClick="{{ m.no }}" style="height: 32px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d1,#101827)">Descartar</button>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ m.confirmado }}" hint-placeholder-val="{{ true }}">
+                    <div style="margin-top: 6px; display: flex; align-items: center; gap: 10px"><span style="font-size: 11px; font-weight: 700; color: var(--d18,#047857)">Confirmado</span><button onClick="{{ m.no }}" style="border: 0; background: transparent; padding: 0; font-size: 12px; font-weight: 700; color: var(--d19,#b91c1c)">Quitar</button></div>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </section>
+            <section style="background: var(--d0,#f3f5f8); border-radius: 14px; padding: 18px 20px">
+              <div style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">Cómo llegó</div>
+              <div style="margin-top: 4px; font-weight: 700">{{ cli.origen }}</div>
+              <div style="margin-top: 12px; font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">Notas</div>
+              <div style="margin-top: 4px; font-size: 14px; color: var(--d31,#374151)">{{ cli.notas }}</div>
+            </section>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- Trabajo -->
+      <sc-if value="{{ cliTrabajo }}" hint-placeholder-val="{{ false }}">
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; align-items: start">
+          <sc-if value="{{ cli.sinTrabajo }}" hint-placeholder-val="{{ false }}"><div style="padding: 30px; background: var(--d7,#ffffff); border: 1px dashed var(--d6,#d5dbe5); border-radius: 14px; color: var(--d5,#5b6577)">Todavía no hay abonos ni proyectos con este cliente.</div></sc-if>
+          <sc-for list="{{ cli.items }}" as="t" hint-placeholder-count="2">
+            <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+              <div style="display: flex; align-items: center; gap: 8px">
+                <span style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: {{ t.tipoBg }}; color: {{ t.tipoFg }}">{{ t.tipo }}</span>
+                <span style="flex-grow: 1"></span>
+                <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 12px; background: {{ t.saludBg }}; color: {{ t.saludFg }}"><span style="width: 8px; height: 8px; border-radius: 4px; background: {{ t.saludColor }}"></span>{{ t.saludLabel }}</span>
+              </div>
+              <div style="font-size: 16px; font-weight: 800">{{ t.nombre }}</div>
+              <div style="display: flex; align-items: baseline; gap: 8px"><span style="font-size: 18px; font-weight: 800">{{ t.valor }}</span><span style="font-size: 12px; color: var(--d5,#5b6577)">{{ t.valorSub }}</span></div>
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)"><span>{{ t.avLabel }}</span><span>{{ t.avTxt }}</span></div>
+                <div style="margin-top: 6px; height: 8px; border-radius: 4px; background: var(--d17,#e4e8ee)"><div style="width: {{ t.avPct }}%; height: 8px; border-radius: 4px; background: #0F766E"></div></div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--d20,#eef1f5); padding-top: 12px">
+                <span style="flex-grow: 1; font-size: 12px; color: var(--d5,#5b6577)">{{ t.prox }}</span>
+                <button onClick="{{ t.open }}" style="height: 34px; padding: 0 14px; border: 0; border-radius: 8px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">Ver detalle</button>
+              </div>
+            </section>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- Finanzas -->
+      <sc-if value="{{ cliFinanzas }}" hint-placeholder-val="{{ false }}">
+        <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 20px">
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+            <h2 style="margin: 0; flex-grow: 1; font-size: 16px; font-weight: 800">Facturas y cobros</h2>
+            <button onClick="{{ cli.facturar }}" style="height: 40px; padding: 0 16px; border: 0; border-radius: 10px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">Emitir factura</button>
+          </div>
+          <sc-if value="{{ cli.sinCobros }}" hint-placeholder-val="{{ false }}"><div style="padding: 24px 0; color: var(--d5,#5b6577)">Todavía no hay facturas de este cliente.</div></sc-if>
+          <sc-for list="{{ cli.cobros }}" as="c" hint-placeholder-count="3">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--d20,#eef1f5); margin-top: 4px">
+              <span style="width: 56px; font-size: 12px; font-weight: 800; color: var(--d5,#5b6577)">{{ c.id }}</span>
+              <span style="flex: 1 1 220px; font-weight: 600">{{ c.concepto }}</span>
+              <span style="font-size: 12px; color: var(--d5,#5b6577)">Vence {{ c.venc }}</span>
+              <span style="font-weight: 800">{{ c.monto }}</span>
+              <span style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: {{ c.bg }}; color: {{ c.fg }}">{{ c.est }}</span>
+              <sc-if value="{{ c.canRemind }}" hint-placeholder-val="{{ false }}"><button onClick="{{ c.remind }}" style="height: 32px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d1,#101827)">Recordar</button></sc-if>
+            </div>
+          </sc-for>
+        </section>
+      </sc-if>
+
+      <!-- Reuniones -->
+      <sc-if value="{{ cliReuniones }}" hint-placeholder-val="{{ false }}">
+        <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 20px">
+          <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 800">Reuniones con {{ cli.nombre }}</h2>
+          <sc-if value="{{ cli.sinReuniones }}" hint-placeholder-val="{{ false }}"><div style="padding: 24px 0; color: var(--d5,#5b6577)">Todavía no hay reuniones grabadas con este cliente.</div></sc-if>
+          <sc-for list="{{ cli.reuniones }}" as="m" hint-placeholder-count="2">
+            <button onClick="{{ m.open }}" style="width: 100%; display: block; text-align: left; padding: 14px 0; border: 0; border-top: 1px solid var(--d20,#eef1f5); background: transparent; color: var(--d1,#101827)">
+              <span style="display: block; font-weight: 800">{{ m.titulo }}</span>
+              <span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">{{ m.fecha }} · {{ m.dur }} · {{ m.nTareas }} compromisos</span>
+              <span style="display: block; margin-top: 6px; font-size: 13px; color: var(--d31,#374151)">{{ m.corto }}</span>
+            </button>
+          </sc-for>
+        </section>
+      </sc-if>
+
+      <!-- Documentos del cliente -->
+      <sc-if value="{{ cliDiags }}" hint-placeholder-val="{{ false }}">
+        <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 20px; max-width: 760px; display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; align-items: center; gap: 12px"><h2 style="margin: 0; flex: 1; font-size: 16px; font-weight: 800">Diagnósticos de {{ altaCli }}</h2><button onClick="{{ cliDiagNuevo }}" style="height: 36px; padding: 0 14px; border: 0; border-radius: 8px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">Nuevo diagnóstico</button></div>
+          <sc-if value="{{ cliDiagVacio }}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; color: var(--d5,#5b6577)">Todavía no hay diagnósticos. Si es un trabajo nuevo, arrancá por acá.</div></sc-if>
+          <sc-for list="{{ cliDiagL }}" as="x" hint-placeholder-count="1"><div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--d20,#eef1f5)"><span style="flex: 1"><span style="display: block; font-weight: 700">{{ x.t }}</span><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">{{ x.sub }}</span></span><button onClick="{{ x.abrir }}" style="height: 32px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d1,#101827)">Abrir</button></div></sc-for>
+        </section>
+      </sc-if>
+      <sc-if value="{{ cliAlta }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px; max-width: 760px">
+          <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+            <div style="display: flex; align-items: baseline; gap: 12px"><h2 style="margin: 0; font-size: 16px; font-weight: 800">Alta de {{ altaCli }}</h2><span style="font-size: 13px; color: var(--d5,#5b6577)">{{ altaTxt }}</span></div>
+            <div style="height: 8px; border-radius: 4px; background: var(--d17,#e4e8ee)"><div style="width: {{ altaPct }}%; height: 8px; border-radius: 4px; background: #0F766E"></div></div>
+            <sc-for list="{{ altaItems }}" as="x" hint-placeholder-count="6"><div style="display: flex; align-items: center; gap: 12px; padding: 8px 0; border-top: 1px solid var(--d20,#eef1f5)"><button onClick="{{ x.toggle }}" aria-label="Marcar" style="width: 24px; height: 24px; flex-shrink: 0; border: 2px solid var(--d21,#b8c0ce); border-radius: 7px; background: {{ x.circBg }}"></button><span style="flex: 1; color: {{ x.color }}; text-decoration: {{ x.deco }}">{{ x.t }}</span></div></sc-for>
+            <sc-if value="{{ altaFalta }}" hint-placeholder-val="{{ true }}"><div style="display: flex; flex-wrap: wrap; gap: 8px; padding-top: 6px"><button onClick="{{ altaPedir }}" style="height: 36px; padding: 0 14px; border: 0; border-radius: 8px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">Pedir al cliente lo que falta</button><button onClick="{{ altaTareas }}" style="height: 32px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d1,#101827)">Crear tareas de lo pendiente</button><button onClick="{{ altaBienvenida }}" style="height: 32px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d1,#101827)">Preparar bienvenida</button></div></sc-if>
+          </section>
+          <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+            <h2 style="margin: 0; font-size: 16px; font-weight: 800">Cierre del trabajo: encuesta y testimonio</h2>
+            <div style="font-size: 13px">{{ encTxt }}</div>
+            <sc-if value="{{ encNada }}" hint-placeholder-val="{{ true }}"><div><button onClick="{{ encEnviar }}" style="height: 36px; padding: 0 14px; border: 0; border-radius: 8px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">Preparar encuesta</button></div></sc-if>
+            <sc-if value="{{ encEnviada }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 8px"><button onClick="{{ encSim9 }}" style="height: 32px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d1,#101827)">Simular respuesta 9 / 10</button><button onClick="{{ encSim5 }}" style="height: 32px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d1,#101827)">Simular respuesta 5 / 10</button></div></sc-if>
+            <sc-if value="{{ encTesti }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; background: var(--d22,#f0fdf4); border-radius: 10px; padding: 10px 12px"><span style="flex: 1 1 240px; font-size: 13px">Dejó un comentario y aceptó que lo uses como testimonio.</span><button onClick="{{ encAprobar }}" style="height: 36px; padding: 0 14px; border: 0; border-radius: 8px; background: #0F766E; color: #fff; font-size: 13px; font-weight: 700">Usar en mis propuestas</button></div></sc-if>
+          </section>
+          <div style="font-size: 12px; color: var(--d5,#5b6577)">El alta arranca cuando el cliente acepta la propuesta. Los mensajes quedan como borrador hasta que los aprobás.</div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ cliDocs }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+              <div style="flex: 1 1 300px"><h2 style="margin: 0; font-size: 16px; font-weight: 800">Archivo de {{ cli.nombre }}</h2><div style="font-size: 13px; color: var(--d5,#5b6577)">Todo lo que subís acá queda como contexto de este cliente. La IA lo usa solo cuando trabajás con él.</div></div>
+              <button onClick="{{ abrirDocCli }}" style="height: 40px; padding: 0 16px; border: 0; border-radius: 10px; background: #0F766E; color: #fff; font-size: 14px; font-weight: 700">Subir documento</button>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center"><span style="font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">Preguntale a la IA:</span>
+              <sc-for list="{{ cliQuick }}" as="q" hint-placeholder-count="3"><button onClick="{{ q.ask }}" style="min-height: 32px; padding: 4px 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 16px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 600; color: var(--d1,#101827)">{{ q.label }}</button></sc-for>
+            </div>
+          </section>
+          <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 20px">
+            <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 800">Documentos subidos</h2>
+            <sc-if value="{{ sinDocsUp }}" hint-placeholder-val="{{ false }}"><div style="padding: 14px 0; color: var(--d5,#5b6577)">Todavía no hay documentos de este cliente: contratos, briefs, accesos, minutas.</div></sc-if>
+            <sc-for list="{{ cliDocsUp }}" as="d" hint-placeholder-count="2">
+              <div style="padding: 12px 0; border-top: 1px solid var(--d20,#eef1f5)">
+                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
+                  <span style="flex: 1 1 240px"><span style="display: block; font-weight: 700">{{ d.nombre }}</span><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">{{ d.tipo }} · {{ d.fuente }} · {{ d.frag }}</span></span>
+                  <span style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: var(--d35,#d1fae5); color: var(--d18,#047857)">{{ d.estado }}</span>
+                  <button onClick="{{ d.preguntar }}" style="height: 32px; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d1,#101827)">Preguntar</button>
+                  <button onClick="{{ d.quitar }}" style="height: 32px; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d19,#b91c1c)">Quitar</button>
+                </div>
+                <div style="margin-top: 8px; background: var(--d0,#f3f5f8); border-radius: 10px; padding: 8px 12px; font-size: 12px; color: var(--d31,#374151)"><b>Lo que entendió la IA:</b> {{ d.resumen }}</div>
+              </div>
+            </sc-for>
+          </section>
+          <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 20px">
+            <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 800">Se agrega solo</h2>
+            <div style="font-size: 12px; color: var(--d5,#5b6577)">Propuestas, reuniones y facturas de este cliente, siempre al día.</div>
+            <sc-for list="{{ cliAuto }}" as="a" hint-placeholder-count="4">
+              <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 0; border-top: 1px solid var(--d20,#eef1f5); margin-top: 8px">
+                <span style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: {{ a.bg }}; color: {{ a.fg }}">{{ a.tipo }}</span>
+                <span style="flex: 1 1 240px"><span style="display: block; font-weight: 700">{{ a.nombre }}</span><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">{{ a.sub }}</span></span>
+                <button onClick="{{ a.run }}" style="height: 32px; padding: 0 12px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d1,#101827)">{{ a.accion }}</button>
+              </div>
+            </sc-for>
+          </section>
+        </div>
+      </sc-if>
+
+      <!-- Historial del cliente -->
+      <sc-if value="{{ cliHistorial }}" hint-placeholder-val="{{ false }}">
+        <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+          <div><h2 style="margin: 0; font-size: 16px; font-weight: 800">Historial de {{ cli.nombre }}</h2><div style="font-size: 13px; color: var(--d5,#5b6577)">Todo lo que pasó con este cliente, en orden. La IA lo lee para responderte y para armar borradores.</div></div>
+          <div style="display: flex; gap: 8px">
+            <label style="flex-grow: 1; display: flex; align-items: stretch; padding: 4px 14px; background: var(--d7,#ffffff); border: 1px solid var(--d6,#d5dbe5); border-radius: 10px"><input value="{{ cliNota }}" onChange="{{ setCliNota }}" placeholder="Agregar una nota: una llamada, un acuerdo, algo que no quieras olvidar" aria-label="Nota" style="flex-grow: 1; min-width: 0; border: 0; outline: 0; font-size: 14px; background: transparent; color: var(--d1,#101827)"></label>
+            <button onClick="{{ addNota }}" style="height: 44px; padding: 0 16px; border: 0; border-radius: 10px; background: #0F766E; color: #fff; font-size: 14px; font-weight: 700">Agregar</button>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px">
+              <select onChange="{{ histFiltrosSel.set }}" aria-label="histFiltros" style="height: 36px; min-width: 220px; max-width: 100%; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 9px; background: var(--d7,#ffffff); font-size: 13px; color: var(--d1,#101827)"><sc-for list="{{ histFiltrosSel.opts }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.label }}</option></sc-for></select>
+            </div>
+          <div>
+            <sc-for list="{{ histL }}" as="e" hint-placeholder-count="5">
+              <div style="display: flex; gap: 12px; padding: 12px 0; border-top: 1px solid var(--d20,#eef1f5)">
+                <span style="margin-top: 6px; width: 10px; height: 10px; border-radius: 5px; background: {{ e.color }}; flex-shrink: 0"></span>
+                <span style="flex-grow: 1">
+                  <span style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px"><span style="font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: {{ e.bg }}; color: {{ e.color }}">{{ e.tipo }}</span><span style="font-size: 12px; color: var(--d5,#5b6577)">{{ e.cuando }}</span></span>
+                  <span style="display: block; margin-top: 4px; font-weight: 600">{{ e.t }}</span>
+                  <sc-if value="{{ e.hasD }}" hint-placeholder-val="{{ false }}"><span style="display: block; font-size: 13px; color: var(--d5,#5b6577)">{{ e.d }}</span></sc-if>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+      </sc-if>
+      <!-- Insights del cliente -->
+      <sc-if value="{{ cliRed }}" hint-placeholder-val="{{ false }}">
+        <section style="background: var(--d7,#ffffff); border: 1px solid var(--d8,#e4e8ee); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px"><div style="flex: 1 1 260px"><h2 style="margin: 0; font-size: 18px; font-weight: 800">Red de esta cuenta</h2><div style="margin-top: 4px; font-size: 13px; color: var(--d5,#5b6577)">Lo confirmado sale de tus registros. Lo probable sale de reglas. Lo que buscás en internet queda como propuesto hasta que lo confirmes. Nunca ves los contactos reales de otra persona.</div></div>
+            <button onClick="{{ cliVerRed }}" style="height: 38px; padding: 0 14px; border: 1px solid var(--d6,#d5dbe5); border-radius: 10px; background: var(--d7,#ffffff); font-size: 13px; font-weight: 700; color: var(--d1,#101827)">Ver en el grafo</button></div>
+          <sc-for list="{{ cliNetRows }}" as="r" hint-placeholder-count="8"><div>
+  <sc-if value="{{ r.isHead }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--d20,#eef1f5)"><b style="font-size: 12px; color: var(--d31,#374151); text-transform: uppercase; letter-spacing: 0.04em">{{ r.t }}</b><span style="font-size: 11px; color: var(--d5,#5b6577)">{{ r.sub }}</span></div></sc-if>
+  <sc-if value="{{ r.isItem }}" hint-placeholder-val="{{ true }}"><div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 0">
+    <sc-if value="{{ r.hasChip }}" hint-placeholder-val="{{ false }}"><span style="font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: {{ r.bg }}; color: {{ r.fg }}; flex-shrink: 0">{{ r.chip }}</span></sc-if>
+    <span style="flex: 1 1 180px; font-size: 13px; color: var(--d1,#101827)">{{ r.t }}<sc-if value="{{ r.hasSub }}" hint-placeholder-val="{{ false }}"><span style="display: block; font-size: 12px; color: var(--d5,#5b6577)">{{ r.sub }}</span></sc-if></span>
+    <sc-if value="{{ r.hasAct }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.act }}" style="height: 30px; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d1,#101827)">{{ r.actL }}</button></sc-if>
+    <sc-if value="{{ r.hasAct2 }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.act2 }}" style="height: 30px; padding: 0 10px; border: 1px solid var(--d6,#d5dbe5); border-radius: 8px; background: var(--d7,#ffffff); font-size: 12px; font-weight: 700; color: var(--d5,#5b6577)">{{ r.act2L }}</button></sc-if>
+  </div></sc-if>
+</div></sc-for>
+        </section>
+      </sc-if>
